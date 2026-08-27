@@ -19,7 +19,7 @@ const CONFIG = {
 
     /* Wedding date */
     WEDDING_DATE:
-        "2026-12-28T08:00:00+07:00"
+        "2026-12-12T08:00:00+07:00"
 
 };
 
