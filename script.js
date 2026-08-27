@@ -1,194 +1,373 @@
-/* =====================================================
-   WEDDING WEBSITE
-   RIZUKA & DENN
-===================================================== */
+/* =========================================================
+   PREMIUM WEDDING INVITATION
+   PERSONAL GUEST + RSVP GOOGLE SHEETS + WHATSAPP
+========================================================= */
 
 
-/* =====================================================
+/* =========================================================
    CONFIGURATION
-===================================================== */
+========================================================= */
 
-const GOOGLE_SCRIPT_URL =
-    "https://script.google.com/macros/s/AKfycbxS1suysupUJSWoaGPXjSlrJw0h0FGq4XwxNjyrTsF1g4xvZZAajZTqklbpgS2dVJCtBg/exec";
+const CONFIG = {
+
+    /*
+     * Google Apps Script Web App
+     */
+    GOOGLE_SCRIPT_URL:
+        "https://script.google.com/macros/s/AKfycbxS1suysupUJSWoaGPXjSlrJw0h0FGq4XwxNjyrTsF1g4xvZZAajZTqklbpgS2dVJCtBg/exec",
+
+    /*
+     * Nomor WhatsApp tujuan.
+     * Format internasional tanpa + dan tanpa 0 depan.
+     *
+     * 089526612634
+     * menjadi:
+     * 6289526612634
+     */
+    WHATSAPP_NUMBER:
+        "6289526612634",
+
+    /*
+     * Tanggal pernikahan
+     *
+     * Tahun-Bulan-Tanggal
+     */
+    WEDDING_DATE:
+        "2026-12-12T08:00:00+07:00"
+
+};
 
 
-const WHATSAPP_NUMBER =
-    "6289526612634";
-
-
-/* =====================================================
-   ELEMENTS
-===================================================== */
+/* =========================================================
+   DOM
+========================================================= */
 
 const openingScreen =
     document.getElementById("openingScreen");
 
-const mainContent =
-    document.getElementById("mainContent");
-
 const openInvitation =
     document.getElementById("openInvitation");
 
-const music =
+const mainContent =
+    document.getElementById("mainContent");
+
+const weddingMusic =
     document.getElementById("weddingMusic");
 
 const musicButton =
     document.getElementById("musicButton");
 
+const musicIcon =
+    document.getElementById("musicIcon");
+
+const floatingElements =
+    document.getElementById("floatingElements");
+
+const guestNameOpening =
+    document.getElementById("guestNameOpening");
+
+const guestNameMain =
+    document.getElementById("guestNameMain");
+
+const guestInput =
+    document.getElementById("guestInput");
+
 const rsvpForm =
     document.getElementById("rsvpForm");
 
-const rsvpSuccess =
-    document.getElementById("rsvpSuccess");
+const rsvpButton =
+    document.getElementById("rsvpButton");
 
-const submitRsvp =
-    document.getElementById("submitRsvp");
-
-const whatsappButton =
-    document.getElementById("whatsappButton");
+const rsvpStatus =
+    document.getElementById("rsvpStatus");
 
 const toast =
     document.getElementById("toast");
 
-
-/* =====================================================
-   RSVP DATA
-===================================================== */
-
-let lastRsvpData = {
-
-    nama: "",
-
-    kehadiran: "",
-
-    jumlahTamu: "",
-
-    ucapan: ""
-
-};
+const toastMessage =
+    document.getElementById("toastMessage");
 
 
-/* =====================================================
+/* =========================================================
+   PERSONAL GUEST NAME
+========================================================= */
+
+function getGuestName() {
+
+    const params =
+        new URLSearchParams(
+            window.location.search
+        );
+
+    let name =
+        params.get("to");
+
+    if (!name) {
+
+        name =
+            "Tamu Undangan";
+
+    }
+
+    /*
+     * Decode URL.
+     */
+    try {
+
+        name =
+            decodeURIComponent(name);
+
+    } catch (error) {
+
+        console.log(
+            "Nama tamu tidak perlu decode."
+        );
+
+    }
+
+    /*
+     * Bersihkan spasi.
+     */
+    name =
+        name.trim();
+
+    /*
+     * Batasi panjang nama
+     * agar tidak merusak layout.
+     */
+    if (name.length > 80) {
+
+        name =
+            name.substring(0, 80);
+
+    }
+
+    return name ||
+        "Tamu Undangan";
+}
+
+
+/* =========================================================
+   SET GUEST NAME
+========================================================= */
+
+const guestName =
+    getGuestName();
+
+guestNameOpening.textContent =
+    guestName;
+
+guestNameMain.textContent =
+    guestName;
+
+guestInput.value =
+    guestName;
+
+
+/* =========================================================
    OPEN INVITATION
-===================================================== */
+========================================================= */
 
 openInvitation.addEventListener(
     "click",
-    function () {
+    async function () {
 
-        openingScreen.classList.add("hide");
+        openingScreen.classList.add(
+            "closed"
+        );
 
-        mainContent.classList.remove("hidden");
-
-        document.body.classList.remove("locked");
-
-        /*
-         * Musik mencoba diputar setelah user
-         * melakukan klik.
-         */
-
-        music
-            .play()
-            .then(function () {
-
-                musicButton.classList.add("playing");
-
-            })
-            .catch(function () {
-
-                console.log(
-                    "Musik membutuhkan interaksi tambahan."
-                );
-
-            });
+        document.body.classList.remove(
+            "locked"
+        );
 
         /*
-         * Scroll ke atas.
+         * Coba mulai musik.
+         * Browser mengizinkan karena
+         * dipicu oleh klik user.
          */
+        try {
 
+            await weddingMusic.play();
+
+            musicButton.classList.add(
+                "playing"
+            );
+
+            musicIcon.textContent =
+                "♫";
+
+        } catch (error) {
+
+            console.log(
+                "Autoplay musik diblokir browser."
+            );
+
+        }
+
+        /*
+         * Scroll ke awal halaman.
+         */
         window.scrollTo({
             top: 0,
-            behavior: "instant"
+            behavior: "smooth"
         });
 
     }
 );
 
 
-/* =====================================================
+/* =========================================================
    MUSIC BUTTON
-===================================================== */
+========================================================= */
 
 musicButton.addEventListener(
     "click",
-    function () {
+    async function () {
 
-        if (music.paused) {
+        if (
+            weddingMusic.paused
+        ) {
 
-            music
-                .play()
-                .then(function () {
+            try {
 
-                    musicButton.classList.add(
-                        "playing"
-                    );
+                await weddingMusic.play();
 
-                })
-                .catch(function (error) {
+                musicButton.classList.add(
+                    "playing"
+                );
 
-                    console.log(error);
+                musicIcon.textContent =
+                    "♫";
 
-                });
+            } catch (error) {
+
+                console.log(error);
+
+            }
 
         } else {
 
-            music.pause();
+            weddingMusic.pause();
 
             musicButton.classList.remove(
                 "playing"
             );
 
+            musicIcon.textContent =
+                "🔇";
         }
 
     }
 );
 
 
-/* =====================================================
-   MUSIC STATE
-===================================================== */
+/* =========================================================
+   FLOATING HEARTS
+========================================================= */
 
-music.addEventListener(
-    "play",
-    function () {
+function createFloatingElement() {
 
-        musicButton.classList.add(
-            "playing"
-        );
-
+    if (!floatingElements) {
+        return;
     }
+
+    const element =
+        document.createElement("div");
+
+    element.className =
+        "floating";
+
+    const symbols = [
+        "♡",
+        "✦",
+        "✧",
+        "·",
+        "❀"
+    ];
+
+    element.textContent =
+        symbols[
+            Math.floor(
+                Math.random() *
+                symbols.length
+            )
+        ];
+
+    const size =
+        Math.random() * 18 + 10;
+
+    const left =
+        Math.random() * 100;
+
+    const duration =
+        Math.random() * 8 + 8;
+
+    const delay =
+        Math.random() * 2;
+
+    element.style.left =
+        left + "%";
+
+    element.style.fontSize =
+        size + "px";
+
+    element.style.animationDuration =
+        duration + "s";
+
+    element.style.animationDelay =
+        delay + "s";
+
+    floatingElements.appendChild(
+        element
+    );
+
+    setTimeout(
+        () => {
+
+            element.remove();
+
+        },
+        (duration + delay) * 1000
+    );
+
+}
+
+
+/*
+ * Buat beberapa elemen pertama.
+ */
+
+for (
+    let i = 0;
+    i < 10;
+    i++
+) {
+
+    setTimeout(
+        createFloatingElement,
+        i * 500
+    );
+
+}
+
+
+/*
+ * Teruskan animasi.
+ */
+
+setInterval(
+    createFloatingElement,
+    1300
 );
 
 
-music.addEventListener(
-    "pause",
-    function () {
-
-        musicButton.classList.remove(
-            "playing"
-        );
-
-    }
-);
-
-
-/* =====================================================
+/* =========================================================
    COUNTDOWN
-===================================================== */
+========================================================= */
 
 const weddingDate =
     new Date(
-        "December 12, 2026 08:00:00"
+        CONFIG.WEDDING_DATE
     ).getTime();
 
 
@@ -197,77 +376,81 @@ function updateCountdown() {
     const now =
         new Date().getTime();
 
-    const distance =
+    const difference =
         weddingDate - now;
 
 
-    if (distance <= 0) {
+    if (difference <= 0) {
 
-        document.getElementById("days")
-            .textContent = "00";
+        document.getElementById(
+            "days"
+        ).textContent = "00";
 
-        document.getElementById("hours")
-            .textContent = "00";
+        document.getElementById(
+            "hours"
+        ).textContent = "00";
 
-        document.getElementById("minutes")
-            .textContent = "00";
+        document.getElementById(
+            "minutes"
+        ).textContent = "00";
 
-        document.getElementById("seconds")
-            .textContent = "00";
+        document.getElementById(
+            "seconds"
+        ).textContent = "00";
 
         return;
-
     }
 
 
     const days =
         Math.floor(
-            distance /
+            difference /
             (1000 * 60 * 60 * 24)
         );
 
-
     const hours =
         Math.floor(
-            (distance %
+            (difference %
                 (1000 * 60 * 60 * 24)) /
             (1000 * 60 * 60)
         );
 
-
     const minutes =
         Math.floor(
-            (distance %
+            (difference %
                 (1000 * 60 * 60)) /
             (1000 * 60)
         );
 
-
     const seconds =
         Math.floor(
-            (distance %
+            (difference %
                 (1000 * 60)) /
             1000
         );
 
 
-    document.getElementById("days")
-        .textContent =
+    document.getElementById(
+        "days"
+    ).textContent =
         String(days).padStart(2, "0");
 
 
-    document.getElementById("hours")
-        .textContent =
+    document.getElementById(
+        "hours"
+    ).textContent =
         String(hours).padStart(2, "0");
 
 
-    document.getElementById("minutes")
-        .textContent =
+    document.getElementById(
+        "minutes"
+    ).textContent =
         String(minutes).padStart(2, "0");
 
 
-    document.getElementById("seconds")
-        .textContent =
+    document.getElementById(
+        "seconds"
+    ).textContent =
         String(seconds).padStart(2, "0");
 
 }
@@ -281,32 +464,15 @@ setInterval(
 );
 
 
-/* =====================================================
-   RSVP SUBMIT
-===================================================== */
+/* =========================================================
+   RSVP GOOGLE SHEETS
+========================================================= */
 
 rsvpForm.addEventListener(
     "submit",
-    function (event) {
-
-        /*
-         * Jangan reload halaman.
-         */
+    async function (event) {
 
         event.preventDefault();
-
-
-        /*
-         * Validasi form.
-         */
-
-        if (!rsvpForm.checkValidity()) {
-
-            rsvpForm.reportValidity();
-
-            return;
-
-        }
 
 
         /*
@@ -314,202 +480,300 @@ rsvpForm.addEventListener(
          */
 
         const nama =
-            document.getElementById("nama")
-                .value
-                .trim();
-
+            document.getElementById(
+                "guestInput"
+            ).value.trim();
 
         const kehadiran =
-            document.getElementById("kehadiran")
-                .value;
+            document.getElementById(
+                "attendance"
+            ).value;
 
+        const jumlah =
+            document.getElementById(
+                "guestCount"
+            ).value;
 
-        const jumlahTamu =
-            document.getElementById("jumlahTamu")
-                .value;
-
-
-        const ucapan =
-            document.getElementById("ucapan")
-                .value
-                .trim();
+        const pesan =
+            document.getElementById(
+                "message"
+            ).value.trim();
 
 
         /*
-         * Simpan untuk WhatsApp.
+         * Validasi.
          */
 
-        lastRsvpData = {
+        if (!nama) {
 
-            nama:
-                nama,
+            showToast(
+                "Nama belum diisi."
+            );
 
-            kehadiran:
-                kehadiran,
+            return;
 
-            jumlahTamu:
-                jumlahTamu,
+        }
 
-            ucapan:
-                ucapan
+        if (!kehadiran) {
 
-        };
+            showToast(
+                "Silakan pilih kehadiran."
+            );
+
+            return;
+
+        }
+
+        if (!jumlah) {
+
+            showToast(
+                "Silakan pilih jumlah tamu."
+            );
+
+            return;
+
+        }
 
 
         /*
-         * Ubah tombol menjadi loading.
+         * Loading state.
          */
 
-        submitRsvp.disabled = true;
+        const originalButton =
+            rsvpButton.innerHTML;
 
-        submitRsvp.innerHTML =
-            "<span>♡</span> Mengirim RSVP...";
+        rsvpButton.disabled =
+            true;
 
+        rsvpButton.innerHTML =
+            "⏳ Mengirim RSVP...";
 
-        /*
-         * Pastikan action form menggunakan
-         * Google Apps Script URL.
-         */
-
-        rsvpForm.action =
-            GOOGLE_SCRIPT_URL;
+        rsvpStatus.textContent =
+            "Menyimpan konfirmasi Anda...";
 
 
         /*
-         * Submit form asli ke iframe.
+         * Data untuk Google Apps Script.
          *
-         * Ini membuat browser mengirim POST
-         * langsung ke Google Apps Script
-         * tanpa masalah CORS.
+         * Menggunakan URLSearchParams
+         * agar tidak terkena preflight CORS.
          */
 
-        const hiddenSubmit =
-            document.createElement("button");
+        const formData =
+            new URLSearchParams();
 
-        hiddenSubmit.type = "submit";
+        formData.append(
+            "nama",
+            nama
+        );
 
-        hiddenSubmit.style.display =
-            "none";
+        formData.append(
+            "kehadiran",
+            kehadiran
+        );
 
-        rsvpForm.appendChild(
-            hiddenSubmit
+        formData.append(
+            "jumlah",
+            jumlah
+        );
+
+        formData.append(
+            "pesan",
+            pesan
+        );
+
+        formData.append(
+            "timestamp",
+            new Date().toISOString()
         );
 
 
-        hiddenSubmit.click();
+        try {
+
+            /*
+             * Kirim ke Google Apps Script.
+             *
+             * no-cors digunakan karena
+             * Apps Script tidak perlu
+             * mengembalikan data ke browser.
+             */
+
+            await fetch(
+                CONFIG.GOOGLE_SCRIPT_URL,
+                {
+                    method: "POST",
+
+                    mode: "no-cors",
+
+                    body: formData
+                }
+            );
 
 
-        /*
-         * Beri sedikit waktu kepada browser
-         * untuk mengirim request.
-         */
+            /*
+             * Tampilkan sukses.
+             */
 
-        setTimeout(
-            function () {
+            rsvpStatus.innerHTML =
+                "✓ RSVP berhasil dikirim. " +
+                "Terima kasih atas konfirmasi Anda.";
 
-                rsvpForm.style.display =
-                    "none";
-
-                rsvpSuccess.classList.add(
-                    "show"
-                );
+            rsvpStatus.style.color =
+                "#7c765d";
 
 
-                submitRsvp.disabled =
-                    false;
+            showToast(
+                "RSVP berhasil dikirim!"
+            );
 
 
-                submitRsvp.innerHTML =
-                    "<span>♡</span> Kirim RSVP";
+            /*
+             * Buat pesan WhatsApp.
+             */
+
+            const whatsappMessage =
+                createWhatsAppMessage({
+                    nama,
+                    kehadiran,
+                    jumlah,
+                    pesan
+                });
 
 
-                showToast(
-                    "RSVP berhasil dikirim ♡"
-                );
+            /*
+             * Tunggu sebentar agar user
+             * melihat pesan sukses.
+             */
+
+            setTimeout(
+                function () {
+
+                    openWhatsApp(
+                        whatsappMessage
+                    );
+
+                },
+                900
+            );
 
 
-                hiddenSubmit.remove();
+            /*
+             * Reset pesan.
+             * Nama personal tetap dipertahankan.
+             */
 
-            },
-            1200
-        );
+            document.getElementById(
+                "message"
+            ).value = "";
+
+
+        } catch (error) {
+
+            console.error(
+                "RSVP error:",
+                error
+            );
+
+
+            rsvpStatus.innerHTML =
+                "Maaf, terjadi masalah saat mengirim RSVP. " +
+                "Silakan coba lagi.";
+
+            rsvpStatus.style.color =
+                "#a34f4f";
+
+
+            showToast(
+                "Gagal mengirim RSVP."
+            );
+
+        } finally {
+
+            rsvpButton.disabled =
+                false;
+
+            rsvpButton.innerHTML =
+                originalButton;
+
+        }
 
     }
 );
 
 
-/* =====================================================
-   WHATSAPP
-===================================================== */
+/* =========================================================
+   WHATSAPP MESSAGE
+========================================================= */
 
-whatsappButton.addEventListener(
-    "click",
-    function () {
+function createWhatsAppMessage(data) {
 
-        const nama =
-            lastRsvpData.nama ||
-            "-";
+    const nama =
+        data.nama;
 
+    const kehadiran =
+        data.kehadiran;
 
-        const kehadiran =
-            lastRsvpData.kehadiran ||
-            "-";
+    const jumlah =
+        data.jumlah;
 
-
-        const jumlahTamu =
-            lastRsvpData.jumlahTamu ||
-            "-";
+    const pesan =
+        data.pesan ||
+        "-";
 
 
-        const ucapan =
-            lastRsvpData.ucapan ||
-            "-";
+    let message =
+
+        "Halo, saya ingin mengonfirmasi RSVP " +
+        "untuk pernikahan Rizuka & Partner.%0A%0A" +
+
+        "👤 Nama: " +
+        nama +
+        "%0A" +
+
+        "💍 Kehadiran: " +
+        kehadiran +
+        "%0A" +
+
+        "👥 Jumlah tamu: " +
+        jumlah +
+        " orang%0A" +
+
+        "💌 Ucapan: " +
+        pesan;
 
 
-        const message =
-
-`💍 WEDDING RSVP
-
-Halo, saya ingin mengonfirmasi kehadiran untuk acara pernikahan Rizuka & Denn.
-
-Nama:
-${nama}
-
-Kehadiran:
-${kehadiran}
-
-Jumlah Tamu:
-${jumlahTamu} orang
-
-Ucapan & Doa:
-${ucapan}
-
-Terima kasih 🤍`;
+    return message;
+}
 
 
-        const whatsappURL =
-            "https://wa.me/" +
-            WHATSAPP_NUMBER +
-            "?text=" +
-            encodeURIComponent(message);
+/* =========================================================
+   OPEN WHATSAPP
+========================================================= */
+
+function openWhatsApp(message) {
+
+    const url =
+        "https://wa.me/" +
+        CONFIG.WHATSAPP_NUMBER +
+        "?text=" +
+        message;
 
 
-        window.open(
-            whatsappURL,
-            "_blank"
-        );
+    window.open(
+        url,
+        "_blank"
+    );
 
-    }
-);
+}
 
 
-/* =====================================================
+/* =========================================================
    TOAST
-===================================================== */
+========================================================= */
 
 function showToast(message) {
 
-    toast.textContent =
+    toastMessage.textContent =
         message;
 
     toast.classList.add(
@@ -531,49 +795,112 @@ function showToast(message) {
 }
 
 
-/* =====================================================
-   GUEST NAME FROM URL
-===================================================== */
+/* =========================================================
+   GIFT
+========================================================= */
 
-function getGuestName() {
+const giftButton =
+    document.getElementById(
+        "giftButton"
+    );
 
-    const params =
-        new URLSearchParams(
-            window.location.search
+const giftDetails =
+    document.getElementById(
+        "giftDetails"
+    );
+
+
+giftButton.addEventListener(
+    "click",
+    function () {
+
+        giftDetails.classList.toggle(
+            "show"
         );
 
 
-    const guest =
-        params.get("to");
+        if (
+            giftDetails.classList.contains(
+                "show"
+            )
+        ) {
 
+            giftButton.textContent =
+                "Sembunyikan Rekening";
 
-    if (guest) {
+        } else {
 
-        const decodedGuest =
-            decodeURIComponent(
-                guest.replace(
-                    /\+/g,
-                    " "
-                )
-            );
+            giftButton.textContent =
+                "Lihat Rekening";
 
-
-        document.getElementById(
-            "guestName"
-        ).textContent =
-            decodedGuest;
+        }
 
     }
-
-}
-
-
-getGuestName();
+);
 
 
-/* =====================================================
-   SCROLL REVEAL
-===================================================== */
+/* =========================================================
+   COPY BANK ACCOUNT
+========================================================= */
+
+const copyAccount =
+    document.getElementById(
+        "copyAccount"
+    );
+
+const accountNumber =
+    document.getElementById(
+        "accountNumber"
+    );
+
+
+copyAccount.addEventListener(
+    "click",
+    async function () {
+
+        const number =
+            accountNumber.textContent.trim();
+
+
+        try {
+
+            await navigator.clipboard.writeText(
+                number
+            );
+
+            showToast(
+                "Nomor rekening berhasil disalin."
+            );
+
+            copyAccount.textContent =
+                "✓ Berhasil Disalin";
+
+
+            setTimeout(
+                function () {
+
+                    copyAccount.textContent =
+                        "Salin Nomor Rekening";
+
+                },
+                2000
+            );
+
+        } catch (error) {
+
+            showToast(
+                "Tidak dapat menyalin otomatis."
+            );
+
+        }
+
+    }
+);
+
+
+/* =========================================================
+   SCROLL ANIMATION
+========================================================= */
 
 const observer =
     new IntersectionObserver(
@@ -604,7 +931,7 @@ const observer =
 
 document
     .querySelectorAll(
-        ".section-heading, .person-card, .event-card, .story-item, .rsvp-card"
+        ".section-heading, .event-card, .person-card, .timeline-item, .rsvp-card, .gallery-item"
     )
     .forEach(
         function (element) {
@@ -617,24 +944,41 @@ document
     );
 
 
-/* =====================================================
-   PREVENT BODY SCROLL AT OPENING
-===================================================== */
+/* =========================================================
+   PREVENT ACCIDENTAL FORM RESUBMISSION
+========================================================= */
 
-document.body.classList.add(
-    "locked"
+window.addEventListener(
+    "beforeunload",
+    function () {
+
+        if (
+            weddingMusic &&
+            !weddingMusic.paused
+        ) {
+
+            weddingMusic.pause();
+
+        }
+
+    }
 );
 
 
-/* =====================================================
-   PAGE READY
-===================================================== */
+/* =========================================================
+   CONSOLE INFO
+========================================================= */
 
 console.log(
-    "Wedding Invitation loaded successfully."
+    "Premium Wedding Invitation Loaded."
 );
 
 console.log(
-    "Google Sheets RSVP endpoint:",
-    GOOGLE_SCRIPT_URL
+    "Guest:",
+    guestName
+);
+
+console.log(
+    "RSVP endpoint:",
+    CONFIG.GOOGLE_SCRIPT_URL
 );
