@@ -1,185 +1,198 @@
-/* ============================================
-   WEDDING INVITATION JAVASCRIPT
-============================================ */
+/* =====================================================
+   LUXURY WEDDING INVITATION
+   JAVASCRIPT
+===================================================== */
 
 
-/* ============================================
-   LOADING SCREEN
-============================================ */
-
-window.addEventListener("load", function () {
-
-    const loadingScreen =
-        document.getElementById("loadingScreen");
-
-    setTimeout(function () {
-
-        loadingScreen.classList.add("hide");
-
-    }, 1200);
-
-});
-
-
-/* ============================================
+/* =====================================================
    ELEMENTS
-============================================ */
+===================================================== */
+
+const loader =
+    document.getElementById("loader");
 
 const opening =
     document.getElementById("opening");
 
-const mainContent =
-    document.getElementById("mainContent");
+const main =
+    document.getElementById("main");
 
 const envelope =
     document.getElementById("envelope");
 
-const openInvitation =
-    document.getElementById("openInvitation");
+const openBtn =
+    document.getElementById("openBtn");
 
-const musicButton =
-    document.getElementById("musicButton");
+const music =
+    document.getElementById("music");
 
-const backgroundMusic =
-    document.getElementById("backgroundMusic");
+const musicBtn =
+    document.getElementById("musicBtn");
 
 const toast =
     document.getElementById("toast");
 
+const topBtn =
+    document.getElementById("topBtn");
 
-/* ============================================
-   INITIAL STATE
-============================================ */
+const shareBtn =
+    document.getElementById("shareBtn");
+
+
+/* =====================================================
+   INITIAL
+===================================================== */
 
 document.body.classList.add("locked");
 
 
-/* ============================================
+/* =====================================================
+   LOADING
+===================================================== */
+
+window.addEventListener(
+    "load",
+    function () {
+
+        setTimeout(
+            function () {
+
+                loader.classList.add("hide");
+
+            },
+            1500
+        );
+
+    }
+);
+
+
+/* =====================================================
    OPEN INVITATION
-============================================ */
+===================================================== */
 
-let invitationOpened = false;
+let opened = false;
 
-function openWeddingInvitation() {
+function openInvitation() {
 
-    if (invitationOpened) {
+    if (opened) {
         return;
     }
 
-    invitationOpened = true;
+    opened = true;
 
     envelope.classList.add("open");
 
-    openInvitation.innerHTML =
-        "Membuka Undangan...";
+    openBtn.innerHTML =
+        "<span>OPENING...</span><i>✦</i>";
 
     createConfetti();
 
-    setTimeout(function () {
+    setTimeout(
+        function () {
 
-        opening.classList.add("closed");
+            opening.classList.add("closed");
 
-        mainContent.classList.add("visible");
+            main.classList.add("visible");
 
-        document.body.classList.remove("locked");
+            document.body.classList.remove(
+                "locked"
+            );
 
-        openInvitation.innerHTML =
-            "Undangan Dibuka ♡";
+            openBtn.innerHTML =
+                "<span>INVITATION OPENED</span><i>✓</i>";
 
-        window.scrollTo({
-            top: 0,
-            behavior: "smooth"
-        });
+            window.scrollTo({
+                top: 0,
+                behavior: "smooth"
+            });
 
-        startMusic();
+            startMusic();
 
-    }, 1300);
+        },
+        1300
+    );
 
 }
 
 
 envelope.addEventListener(
     "click",
-    openWeddingInvitation
+    openInvitation
 );
 
-openInvitation.addEventListener(
+openBtn.addEventListener(
     "click",
-    openWeddingInvitation
+    openInvitation
 );
 
 
-/* ============================================
-   BACKGROUND MUSIC
-============================================ */
+/* =====================================================
+   MUSIC
+===================================================== */
 
 function startMusic() {
 
-    if (!backgroundMusic) {
+    if (!music.querySelector("source")) {
         return;
     }
 
-    if (
-        backgroundMusic.querySelector("source") === null &&
-        !backgroundMusic.src
-    ) {
-        return;
-    }
+    music
+        .play()
+        .then(
+            function () {
 
-    const playPromise =
-        backgroundMusic.play();
-
-    if (playPromise !== undefined) {
-
-        playPromise
-            .then(function () {
-
-                musicButton.classList.add(
+                musicBtn.classList.add(
                     "playing"
                 );
 
-            })
-            .catch(function () {
+            }
+        )
+        .catch(
+            function () {
 
-                // Browser may block autoplay.
-                // User can manually press music button.
+                console.log(
+                    "Autoplay blocked."
+                );
 
-            });
-
-    }
+            }
+        );
 
 }
 
 
-musicButton.addEventListener(
+musicBtn.addEventListener(
     "click",
     function () {
 
-        if (
-            backgroundMusic.paused
-        ) {
+        if (music.paused) {
 
-            backgroundMusic.play()
-                .then(function () {
+            music
+                .play()
+                .then(
+                    function () {
 
-                    musicButton.classList.add(
-                        "playing"
-                    );
+                        musicBtn.classList.add(
+                            "playing"
+                        );
 
-                })
-                .catch(function () {
+                    }
+                )
+                .catch(
+                    function () {
 
-                    showToast(
-                        "Tambahkan file musik terlebih dahulu."
-                    );
+                        showToast(
+                            "Tambahkan file musik terlebih dahulu."
+                        );
 
-                });
+                    }
+                );
 
         } else {
 
-            backgroundMusic.pause();
+            music.pause();
 
-            musicButton.classList.remove(
+            musicBtn.classList.remove(
                 "playing"
             );
 
@@ -189,18 +202,23 @@ musicButton.addEventListener(
 );
 
 
-/* ============================================
+/* =====================================================
    COUNTDOWN
-============================================ */
+===================================================== */
 
 /*
-    GANTI TANGGAL DI SINI.
+==========================================================
+EDIT DI SINI
 
-    Format:
-    Tahun-Bulan-TanggalTJam:Menit:Detik
+Format:
 
-    Contoh:
-    2026-12-20T08:00:00
+YYYY-MM-DDTHH:MM:SS
+
+Contoh:
+
+2026-12-20T08:00:00
+
+==========================================================
 */
 
 const weddingDate =
@@ -220,17 +238,12 @@ function updateCountdown() {
 
     if (distance <= 0) {
 
-        document.getElementById("days")
-            .textContent = "00";
-
-        document.getElementById("hours")
-            .textContent = "00";
-
-        document.getElementById("minutes")
-            .textContent = "00";
-
-        document.getElementById("seconds")
-            .textContent = "00";
+        setCountdown(
+            0,
+            0,
+            0,
+            0
+        );
 
         return;
 
@@ -243,6 +256,7 @@ function updateCountdown() {
             (1000 * 60 * 60 * 24)
         );
 
+
     const hours =
         Math.floor(
             (
@@ -252,6 +266,7 @@ function updateCountdown() {
             (1000 * 60 * 60)
         );
 
+
     const minutes =
         Math.floor(
             (
@@ -260,6 +275,7 @@ function updateCountdown() {
             ) /
             (1000 * 60)
         );
+
 
     const seconds =
         Math.floor(
@@ -271,21 +287,57 @@ function updateCountdown() {
         );
 
 
-    document.getElementById("days")
-        .textContent =
-        String(days).padStart(2, "0");
+    setCountdown(
+        days,
+        hours,
+        minutes,
+        seconds
+    );
 
-    document.getElementById("hours")
-        .textContent =
-        String(hours).padStart(2, "0");
+}
 
-    document.getElementById("minutes")
-        .textContent =
-        String(minutes).padStart(2, "0");
 
-    document.getElementById("seconds")
-        .textContent =
-        String(seconds).padStart(2, "0");
+function setCountdown(
+    days,
+    hours,
+    minutes,
+    seconds
+) {
+
+    document.getElementById(
+        "days"
+    ).textContent =
+        String(days).padStart(
+            2,
+            "0"
+        );
+
+
+    document.getElementById(
+        "hours"
+    ).textContent =
+        String(hours).padStart(
+            2,
+            "0"
+        );
+
+
+    document.getElementById(
+        "minutes"
+    ).textContent =
+        String(minutes).padStart(
+            2,
+            "0"
+        );
+
+
+    document.getElementById(
+        "seconds"
+    ).textContent =
+        String(seconds).padStart(
+            2,
+            "0"
+        );
 
 }
 
@@ -298,12 +350,14 @@ setInterval(
 );
 
 
-/* ============================================
+/* =====================================================
    SCROLL REVEAL
-============================================ */
+===================================================== */
 
 const revealElements =
-    document.querySelectorAll(".reveal");
+    document.querySelectorAll(
+        ".reveal"
+    );
 
 
 const revealObserver =
@@ -348,29 +402,85 @@ revealElements.forEach(
 );
 
 
-/* ============================================
-   BACK TO TOP
-============================================ */
+/* =====================================================
+   GALLERY LIGHTBOX
+===================================================== */
 
-const backToTop =
-    document.getElementById("backToTop");
+const galleryImages =
+    document.querySelectorAll(
+        ".gallery-image img"
+    );
+
+const lightbox =
+    document.getElementById(
+        "lightbox"
+    );
+
+const lightboxImage =
+    document.getElementById(
+        "lightboxImage"
+    );
+
+const closeLightbox =
+    document.getElementById(
+        "closeLightbox"
+    );
 
 
-window.addEventListener(
-    "scroll",
-    function () {
+galleryImages.forEach(
+    function (image) {
 
-        if (window.scrollY > 500) {
+        image.parentElement.addEventListener(
+            "click",
+            function () {
 
-            backToTop.classList.add(
-                "show"
-            );
+                lightboxImage.src =
+                    image.src;
 
-        } else {
+                lightbox.classList.add(
+                    "active"
+                );
 
-            backToTop.classList.remove(
-                "show"
-            );
+                document.body.classList.add(
+                    "locked"
+                );
+
+            }
+        );
+
+    }
+);
+
+
+function closeGallery() {
+
+    lightbox.classList.remove(
+        "active"
+    );
+
+    document.body.classList.remove(
+        "locked"
+    );
+
+}
+
+
+closeLightbox.addEventListener(
+    "click",
+    closeGallery
+);
+
+
+lightbox.addEventListener(
+    "click",
+    function (event) {
+
+        if (
+            event.target ===
+            lightbox
+        ) {
+
+            closeGallery();
 
         }
 
@@ -378,26 +488,13 @@ window.addEventListener(
 );
 
 
-backToTop.addEventListener(
-    "click",
-    function () {
-
-        window.scrollTo({
-            top: 0,
-            behavior: "smooth"
-        });
-
-    }
-);
-
-
-/* ============================================
-   COPY ACCOUNT NUMBER
-============================================ */
+/* =====================================================
+   COPY ACCOUNT
+===================================================== */
 
 const copyButtons =
     document.querySelectorAll(
-        ".copy-button"
+        ".copy-account"
     );
 
 
@@ -406,52 +503,46 @@ copyButtons.forEach(
 
         button.addEventListener(
             "click",
-            function () {
+            async function () {
 
-                const number =
-                    button.getAttribute(
-                        "data-copy"
+                const account =
+                    button.dataset.account;
+
+
+                try {
+
+                    await navigator
+                        .clipboard
+                        .writeText(account);
+
+                    showToast(
+                        "Nomor rekening berhasil disalin."
                     );
 
+                } catch (error) {
 
-                if (
-                    navigator.clipboard &&
-                    navigator.clipboard.writeText
-                ) {
-
-                    navigator.clipboard
-                        .writeText(number)
-                        .then(function () {
-
-                            showToast(
-                                "Nomor rekening berhasil disalin ♡"
-                            );
-
-                        });
-
-                } else {
-
-                    const temp =
+                    const textarea =
                         document.createElement(
                             "textarea"
                         );
 
-                    temp.value = number;
+                    textarea.value =
+                        account;
 
                     document.body.appendChild(
-                        temp
+                        textarea
                     );
 
-                    temp.select();
+                    textarea.select();
 
                     document.execCommand(
                         "copy"
                     );
 
-                    temp.remove();
+                    textarea.remove();
 
                     showToast(
-                        "Nomor rekening berhasil disalin ♡"
+                        "Nomor rekening berhasil disalin."
                     );
 
                 }
@@ -463,51 +554,56 @@ copyButtons.forEach(
 );
 
 
-/* ============================================
+/* =====================================================
    RSVP
-============================================ */
+===================================================== */
 
 const rsvpForm =
     document.getElementById(
         "rsvpForm"
     );
 
-const guestMessages =
+const messagesContainer =
     document.getElementById(
-        "guestMessages"
+        "messages"
     );
 
 
 let messages =
     JSON.parse(
         localStorage.getItem(
-            "weddingMessages"
+            "luxuryWeddingMessages"
         )
     ) || [];
 
 
-/* ============================================
-   DISPLAY MESSAGES
-============================================ */
-
 function displayMessages() {
 
-    guestMessages.innerHTML = "";
+    messagesContainer.innerHTML = "";
 
 
     messages
         .slice()
         .reverse()
         .forEach(
-            function (message) {
+            function (item) {
 
-                const messageElement =
+                const message =
+                    document.createElement(
+                        "article"
+                    );
+
+                message.className =
+                    "message";
+
+
+                const head =
                     document.createElement(
                         "div"
                     );
 
-                messageElement.className =
-                    "guest-message";
+                head.className =
+                    "message-head";
 
 
                 const name =
@@ -515,20 +611,23 @@ function displayMessages() {
                         "strong"
                     );
 
+                name.className =
+                    "message-name";
+
                 name.textContent =
-                    message.name;
+                    item.name;
 
 
-                const attendance =
+                const status =
                     document.createElement(
                         "span"
                     );
 
-                attendance.className =
-                    "attendance";
+                status.className =
+                    "message-status";
 
-                attendance.textContent =
-                    message.attendance;
+                status.textContent =
+                    item.attendance;
 
 
                 const text =
@@ -536,25 +635,33 @@ function displayMessages() {
                         "p"
                     );
 
+                text.className =
+                    "message-text";
+
                 text.textContent =
-                    message.message;
+                    item.message;
 
 
-                messageElement.appendChild(
+                head.appendChild(
                     name
                 );
 
-                messageElement.appendChild(
-                    attendance
+                head.appendChild(
+                    status
                 );
 
-                messageElement.appendChild(
+
+                message.appendChild(
+                    head
+                );
+
+                message.appendChild(
                     text
                 );
 
 
-                guestMessages.appendChild(
-                    messageElement
+                messagesContainer.appendChild(
+                    message
                 );
 
             }
@@ -566,10 +673,6 @@ function displayMessages() {
 displayMessages();
 
 
-/* ============================================
-   RSVP SUBMIT
-============================================ */
-
 rsvpForm.addEventListener(
     "submit",
     function (event) {
@@ -578,21 +681,29 @@ rsvpForm.addEventListener(
 
 
         const name =
-            document.getElementById(
-                "guestName"
-            ).value.trim();
+            document
+                .getElementById(
+                    "guestName"
+                )
+                .value
+                .trim();
 
 
         const attendance =
-            document.getElementById(
-                "guestAttendance"
-            ).value;
+            document
+                .getElementById(
+                    "guestAttendance"
+                )
+                .value;
 
 
         const message =
-            document.getElementById(
-                "guestMessage"
-            ).value.trim();
+            document
+                .getElementById(
+                    "guestMessage"
+                )
+                .value
+                .trim();
 
 
         if (
@@ -612,14 +723,17 @@ rsvpForm.addEventListener(
 
         const newMessage = {
 
-            name: name,
+            name:
+                name,
 
-            attendance: attendance,
+            attendance:
+                attendance,
 
-            message: message,
+            message:
+                message,
 
-            date:
-                new Date().toISOString()
+            created:
+                Date.now()
 
         };
 
@@ -630,8 +744,10 @@ rsvpForm.addEventListener(
 
 
         localStorage.setItem(
-            "weddingMessages",
-            JSON.stringify(messages)
+            "luxuryWeddingMessages",
+            JSON.stringify(
+                messages
+            )
         );
 
 
@@ -642,27 +758,30 @@ rsvpForm.addEventListener(
 
 
         showToast(
-            "Terima kasih atas ucapan dan doanya 💙"
+            "Terima kasih atas ucapan Anda ♡"
         );
 
 
-        createMiniConfetti();
+        createSmallConfetti();
 
     }
 );
 
 
-/* ============================================
+/* =====================================================
    TOAST
-============================================ */
+===================================================== */
 
 let toastTimer;
 
 
-function showToast(message) {
+function showToast(text) {
 
-    toast.textContent =
-        message;
+    toast.querySelector(
+        "p"
+    ).textContent =
+        text;
+
 
     toast.classList.add(
         "show"
@@ -689,38 +808,146 @@ function showToast(message) {
 }
 
 
-/* ============================================
+/* =====================================================
+   SHARE
+===================================================== */
+
+shareBtn.addEventListener(
+    "click",
+    async function () {
+
+        const shareData = {
+
+            title:
+                "The Wedding of Arman & Aisyah",
+
+            text:
+                "Kami mengundang Anda untuk hadir di hari bahagia kami.",
+
+            url:
+                window.location.href
+
+        };
+
+
+        if (
+            navigator.share
+        ) {
+
+            try {
+
+                await navigator.share(
+                    shareData
+                );
+
+            } catch (error) {
+
+                console.log(
+                    "Share cancelled."
+                );
+
+            }
+
+        } else {
+
+            try {
+
+                await navigator
+                    .clipboard
+                    .writeText(
+                        window.location.href
+                    );
+
+                showToast(
+                    "Link undangan berhasil disalin."
+                );
+
+            } catch (error) {
+
+                showToast(
+                    "Silakan salin link dari browser."
+                );
+
+            }
+
+        }
+
+    }
+);
+
+
+/* =====================================================
+   BACK TO TOP
+===================================================== */
+
+window.addEventListener(
+    "scroll",
+    function () {
+
+        if (
+            window.scrollY > 600
+        ) {
+
+            topBtn.classList.add(
+                "show"
+            );
+
+        } else {
+
+            topBtn.classList.remove(
+                "show"
+            );
+
+        }
+
+    }
+);
+
+
+topBtn.addEventListener(
+    "click",
+    function () {
+
+        window.scrollTo({
+
+            top: 0,
+
+            behavior: "smooth"
+
+        });
+
+    }
+);
+
+
+/* =====================================================
    CONFETTI
-============================================ */
+===================================================== */
 
 function createConfetti() {
 
     const symbols = [
         "✦",
-        "♡",
         "✧",
-        "❀",
-        "✿"
+        "◆",
+        "♡",
+        "❀"
     ];
 
 
     for (
         let i = 0;
-        i < 80;
+        i < 100;
         i++
     ) {
 
-        const confetti =
+        const element =
             document.createElement(
                 "div"
             );
 
 
-        confetti.className =
-            "confetti";
-
-
-        confetti.textContent =
+        element.textContent =
             symbols[
                 Math.floor(
                     Math.random() *
@@ -729,39 +956,52 @@ function createConfetti() {
             ];
 
 
-        confetti.style.left =
-            Math.random() * 100 + "vw";
+        element.style.position =
+            "fixed";
 
+        element.style.left =
+            Math.random() *
+            100 +
+            "vw";
 
-        confetti.style.fontSize =
-            (
-                Math.random() * 10 +
-                8
-            ) + "px";
+        element.style.top =
+            "-30px";
 
+        element.style.zIndex =
+            "15000";
 
-        confetti.style.animationDuration =
+        element.style.pointerEvents =
+            "none";
+
+        element.style.fontSize =
+            Math.random() *
+            12 +
+            7 +
+            "px";
+
+        element.style.color =
+            Math.random() > 0.5
+                ? "#c9a96a"
+                : "#ffffff";
+
+        element.style.animation =
+            "luxuryConfetti " +
             (
                 Math.random() * 3 +
                 3
-            ) + "s";
-
-
-        confetti.style.animationDelay =
-            (
-                Math.random() * 1
-            ) + "s";
+            ) +
+            "s linear forwards";
 
 
         document.body.appendChild(
-            confetti
+            element
         );
 
 
         setTimeout(
             function () {
 
-                confetti.remove();
+                element.remove();
 
             },
             7000
@@ -772,15 +1012,15 @@ function createConfetti() {
 }
 
 
-/* ============================================
-   MINI CONFETTI
-============================================ */
+/* =====================================================
+   SMALL CONFETTI
+===================================================== */
 
-function createMiniConfetti() {
+function createSmallConfetti() {
 
     const symbols = [
-        "♡",
         "✦",
+        "♡",
         "✧"
     ];
 
@@ -791,17 +1031,13 @@ function createMiniConfetti() {
         i++
     ) {
 
-        const item =
+        const element =
             document.createElement(
                 "div"
             );
 
 
-        item.className =
-            "confetti";
-
-
-        item.textContent =
+        element.textContent =
             symbols[
                 Math.floor(
                     Math.random() *
@@ -810,32 +1046,49 @@ function createMiniConfetti() {
             ];
 
 
-        item.style.left =
+        element.style.position =
+            "fixed";
+
+        element.style.left =
             (
-                30 +
-                Math.random() * 40
-            ) + "vw";
+                20 +
+                Math.random() * 60
+            ) +
+            "vw";
 
+        element.style.top =
+            "50%";
 
-        item.style.animationDuration =
+        element.style.zIndex =
+            "15000";
+
+        element.style.pointerEvents =
+            "none";
+
+        element.style.color =
+            "#c9a96a";
+
+        element.style.animation =
+            "luxuryConfetti " +
             (
                 Math.random() * 2 +
                 2
-            ) + "s";
+            ) +
+            "s linear forwards";
 
 
         document.body.appendChild(
-            item
+            element
         );
 
 
         setTimeout(
             function () {
 
-                item.remove();
+                element.remove();
 
             },
-            4500
+            5000
         );
 
     }
@@ -843,32 +1096,237 @@ function createMiniConfetti() {
 }
 
 
-/* ============================================
-   PREVENT EMPTY LINKS
-============================================ */
+/* =====================================================
+   CONFETTI CSS
+===================================================== */
 
-document
-    .querySelectorAll('a[href="#"]')
-    .forEach(
-        function (link) {
+const confettiStyle =
+    document.createElement(
+        "style"
+    );
 
-            link.addEventListener(
-                "click",
-                function (event) {
 
-                    event.preventDefault();
+confettiStyle.innerHTML = `
 
-                }
+@keyframes luxuryConfetti {
+
+    0% {
+        transform:
+            translateY(0)
+            rotate(0deg);
+
+        opacity: 1;
+    }
+
+    100% {
+        transform:
+            translateY(110vh)
+            translateX(
+                ${Math.random() * 300 - 150}px
+            )
+            rotate(720deg);
+
+        opacity: 0;
+    }
+
+}
+
+`;
+
+
+document.head.appendChild(
+    confettiStyle
+);
+
+
+/* =====================================================
+   GOLD PARTICLES
+===================================================== */
+
+const canvas =
+    document.getElementById(
+        "particles"
+    );
+
+const ctx =
+    canvas.getContext("2d");
+
+
+let particles = [];
+
+
+function resizeCanvas() {
+
+    canvas.width =
+        window.innerWidth;
+
+    canvas.height =
+        window.innerHeight;
+
+}
+
+
+resizeCanvas();
+
+
+window.addEventListener(
+    "resize",
+    resizeCanvas
+);
+
+
+function createParticles() {
+
+    particles = [];
+
+
+    const amount =
+        window.innerWidth < 600
+            ? 25
+            : 45;
+
+
+    for (
+        let i = 0;
+        i < amount;
+        i++
+    ) {
+
+        particles.push({
+
+            x:
+                Math.random() *
+                canvas.width,
+
+            y:
+                Math.random() *
+                canvas.height,
+
+            radius:
+                Math.random() *
+                1.5 +
+                0.5,
+
+            speed:
+                Math.random() *
+                0.25 +
+                0.05,
+
+            opacity:
+                Math.random() *
+                0.5 +
+                0.1
+
+        });
+
+    }
+
+}
+
+
+createParticles();
+
+
+function animateParticles() {
+
+    ctx.clearRect(
+        0,
+        0,
+        canvas.width,
+        canvas.height
+    );
+
+
+    particles.forEach(
+        function (particle) {
+
+            particle.y -=
+                particle.speed;
+
+
+            if (
+                particle.y < 0
+            ) {
+
+                particle.y =
+                    canvas.height;
+
+                particle.x =
+                    Math.random() *
+                    canvas.width;
+
+            }
+
+
+            ctx.beginPath();
+
+            ctx.arc(
+                particle.x,
+                particle.y,
+                particle.radius,
+                0,
+                Math.PI * 2
             );
+
+
+            ctx.fillStyle =
+                `rgba(
+                    201,
+                    169,
+                    106,
+                    ${particle.opacity}
+                )`;
+
+
+            ctx.fill();
 
         }
     );
 
 
-/* ============================================
-   CONSOLE MESSAGE
-============================================ */
+    requestAnimationFrame(
+        animateParticles
+    );
+
+}
+
+
+animateParticles();
+
+
+/* =====================================================
+   KEYBOARD ESCAPE
+===================================================== */
+
+document.addEventListener(
+    "keydown",
+    function (event) {
+
+        if (
+            event.key === "Escape"
+        ) {
+
+            if (
+                lightbox.classList.contains(
+                    "active"
+                )
+            ) {
+
+                closeGallery();
+
+            }
+
+        }
+
+    }
+);
+
+
+/* =====================================================
+   CONSOLE
+===================================================== */
 
 console.log(
-    "♡ Wedding Invitation successfully loaded ♡"
+    "%c♡ Luxury Wedding Invitation ♡",
+    "color:#c9a96a;font-size:18px;"
 );
