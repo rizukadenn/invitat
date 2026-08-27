@@ -2,20 +2,25 @@
 <html lang="id">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
-    <title>Rizuka & Denn — Wedding Invitation</title>
+    <meta
+        name="viewport"
+        content="width=device-width, initial-scale=1.0"
+    >
 
     <meta
         name="description"
-        content="The Wedding of Rizuka & Denn — 12 December 2026"
+        content="Wedding Invitation"
     >
 
+    <title>Wedding Invitation | Rizuka & Denn</title>
+
+    <!-- Google Fonts -->
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 
     <link
-        href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:wght@400;500;600;700&family=Montserrat:wght@300;400;500;600&family=Playfair+Display:ital,wght@0,400;1,400&display=swap"
+        href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:wght@400;500;600;700&family=Montserrat:wght@300;400;500;600&display=swap"
         rel="stylesheet"
     >
 
@@ -25,12 +30,31 @@
 <body>
 
 <!-- =====================================================
+     MUSIC
+===================================================== -->
+
+<audio
+    id="weddingMusic"
+    loop
+    preload="auto"
+>
+    <source
+        src="assets/Westlife_-_Beautifull_in_White_(mp3.pm).mp3"
+        type="audio/mpeg"
+    >
+</audio>
+
+
+<!-- =====================================================
      OPENING SCREEN
 ===================================================== -->
 
-<div id="openingScreen">
+<section
+    id="openingScreen"
+    class="opening-screen"
+>
 
-    <div class="opening-pattern"></div>
+    <div class="opening-overlay"></div>
 
     <div class="opening-content">
 
@@ -44,44 +68,41 @@
             Denn
         </h1>
 
-        <p class="opening-date">
-            12 . 12 . 2026
+        <div class="opening-line"></div>
+
+        <p class="opening-text">
+            Kepada Yth.
         </p>
+
+        <h2 id="guestName">
+            Tamu Undangan
+        </h2>
 
         <button
             id="openInvitation"
-            class="gold-button"
-            type="button"
+            class="btn-primary"
         >
-            <span>OPEN INVITATION</span>
-            <i>♡</i>
+            <span>♡</span>
+            Buka Undangan
         </button>
 
-        <p class="opening-hint">
-            Tap to open our invitation
+        <p class="opening-note">
+            Mohon maaf apabila ada kesalahan penulisan nama atau gelar.
         </p>
 
     </div>
 
-</div>
+</section>
 
 
 <!-- =====================================================
-     BACKGROUND MUSIC
+     MAIN WEBSITE
 ===================================================== -->
 
-<audio
-    id="weddingMusic"
-    loop
-    preload="auto"
+<main
+    id="mainContent"
+    class="main-content hidden"
 >
-    <source
-        src="assets/Westlife_-_Beautifull_in_White_(mp3.pm).mp3"
-        type="audio/mpeg"
-    >
-
-    Browser Anda tidak mendukung audio.
-</audio>
 
 
 <!-- =====================================================
@@ -91,105 +112,60 @@
 <button
     id="musicButton"
     class="music-button"
-    type="button"
-    aria-label="Toggle music"
-    title="Music"
+    aria-label="Putar musik"
 >
     ♪
 </button>
 
 
 <!-- =====================================================
-     FLOATING DECORATION
-===================================================== -->
-
-<div class="floating-decoration">
-
-    <span>✦</span>
-    <span>✧</span>
-    <span>♡</span>
-    <span>✦</span>
-    <span>✧</span>
-    <span>♡</span>
-    <span>✦</span>
-    <span>✧</span>
-
-</div>
-
-
-<!-- =====================================================
-     MAIN CONTENT
-===================================================== -->
-
-<main id="mainContent">
-
-
-<!-- =====================================================
      HERO
 ===================================================== -->
 
-<section class="hero">
+<section class="hero section">
 
-    <div class="hero-overlay"></div>
+    <div class="hero-decoration decoration-one">
+        ✦
+    </div>
 
-    <div class="hero-content reveal">
+    <div class="hero-decoration decoration-two">
+        ♡
+    </div>
+
+    <div class="hero-content">
 
         <p class="eyebrow">
-            THE WEDDING OF
+            WE ARE GETTING MARRIED
         </p>
 
-        <h1 class="hero-title">
+        <h1>
             Rizuka
             <span>&</span>
             Denn
         </h1>
 
-        <div class="gold-line"></div>
-
         <p class="hero-date">
-            12 DECEMBER 2026
+            12 . 12 . 2026
         </p>
 
-        <p class="hero-location">
-            Central Java, Indonesia
+        <div class="hero-divider">
+            <span></span>
+            ❦
+            <span></span>
+        </div>
+
+        <p class="hero-description">
+            Dengan penuh kebahagiaan dan rasa syukur,
+            kami mengundang Anda untuk menjadi bagian
+            dari hari istimewa kami.
         </p>
 
         <a
             href="#couple"
             class="scroll-down"
         >
-            <span>SCROLL TO EXPLORE</span>
-            <b>↓</b>
+            ↓
         </a>
-
-    </div>
-
-</section>
-
-
-<!-- =====================================================
-     QUOTE
-===================================================== -->
-
-<section class="quote-section">
-
-    <div class="container narrow reveal">
-
-        <span class="quote-mark">
-            “
-        </span>
-
-        <p class="quote">
-            And among His signs is that He created for you
-            spouses from among yourselves so that you may find
-            comfort in them.
-        </p>
-
-        <div class="gold-line small"></div>
-
-        <p class="quote-source">
-            QS. Ar-Rum : 21
-        </p>
 
     </div>
 
@@ -205,116 +181,84 @@
     class="section couple-section"
 >
 
-    <div class="container">
+    <div class="section-heading">
 
-        <div class="section-heading reveal">
+        <p class="eyebrow">
+            THE BRIDE & GROOM
+        </p>
 
-            <p class="eyebrow">
-                WITH LOVE
+        <h2>
+            Dua Hati,
+            <em>Satu Cerita</em>
+        </h2>
+
+        <p>
+            "Dan di antara tanda-tanda kekuasaan-Nya ialah
+            Dia menciptakan untukmu pasangan hidup..."
+        </p>
+
+        <small>
+            QS. Ar-Rum : 21
+        </small>
+
+    </div>
+
+
+    <div class="couple-container">
+
+        <article class="person-card">
+
+            <div class="portrait portrait-bride">
+                <div class="portrait-inner">
+                    ♡
+                </div>
+            </div>
+
+            <p class="person-role">
+                THE BRIDE
             </p>
 
-            <h2>
-                The Happy Couple
-            </h2>
+            <h3>
+                Rizuka Denn
+            </h3>
 
-            <div class="gold-line"></div>
-
-            <p>
-                Dengan penuh kebahagiaan, kami mengundang
-                Anda untuk menjadi bagian dari hari istimewa kami.
+            <p class="person-desc">
+                Putri tercinta dari
+                <br>
+                Bapak ............ & Ibu ............
             </p>
 
+        </article>
+
+
+        <div class="ampersand">
+            &
         </div>
 
 
-        <div class="couple-grid">
+        <article class="person-card">
 
-
-            <!-- GROOM -->
-
-            <div class="person-card reveal">
-
-                <div class="person-photo">
-
-                    <div class="photo-placeholder">
-                        <span>R</span>
-                    </div>
-
-                    <div class="photo-frame"></div>
-
+            <div class="portrait portrait-groom">
+                <div class="portrait-inner">
+                    ♡
                 </div>
-
-                <p class="person-role">
-                    THE GROOM
-                </p>
-
-                <h3>
-                    Rizuka Denn
-                </h3>
-
-                <p class="person-description">
-                    Putra pertama dari
-                    <br>
-                    Bapak Nama Ayah
-                    <br>
-                    & Ibu Nama Ibu
-                </p>
-
-                <div class="social">
-                    @rizuka
-                </div>
-
             </div>
 
+            <p class="person-role">
+                THE GROOM
+            </p>
 
-            <!-- AMPERSAND -->
+            <h3>
+                Denn
+            </h3>
 
-            <div class="ampersand reveal">
+            <p class="person-desc">
+                Putra tercinta dari
+                <br>
+                Bapak ............ & Ibu ............
+            </p>
 
-                <span>
-                    &
-                </span>
-
-            </div>
-
-
-            <!-- BRIDE -->
-
-            <div class="person-card reveal">
-
-                <div class="person-photo">
-
-                    <div class="photo-placeholder bride">
-                        <span>D</span>
-                    </div>
-
-                    <div class="photo-frame"></div>
-
-                </div>
-
-                <p class="person-role">
-                    THE BRIDE
-                </p>
-
-                <h3>
-                    Denn Rizuka
-                </h3>
-
-                <p class="person-description">
-                    Putri pertama dari
-                    <br>
-                    Bapak Nama Ayah
-                    <br>
-                    & Ibu Nama Ibu
-                </p>
-
-                <div class="social">
-                    @denn
-                </div>
-
-            </div>
-
-        </div>
+        </article>
 
     </div>
 
@@ -322,217 +266,46 @@
 
 
 <!-- =====================================================
-     LOVE STORY
+     SAVE THE DATE
 ===================================================== -->
 
-<section class="story-section">
+<section class="save-date section">
 
-    <div class="container">
+    <div class="save-date-inner">
 
-        <div class="section-heading light reveal">
+        <p class="eyebrow">
+            SAVE THE DATE
+        </p>
 
-            <p class="eyebrow">
-                OUR JOURNEY
-            </p>
+        <h2>
+            12 Desember 2026
+        </h2>
 
-            <h2>
-                Our Love Story
-            </h2>
+        <p>
+            Pernikahan adalah awal dari sebuah perjalanan
+            panjang yang akan kami jalani bersama.
+        </p>
 
-            <div class="gold-line"></div>
-
-        </div>
-
-
-        <div class="timeline">
-
-
-            <div class="timeline-item reveal">
-
-                <div class="timeline-year">
-                    2021
-                </div>
-
-                <div class="timeline-content">
-
-                    <h3>
-                        The Beginning
-                    </h3>
-
-                    <p>
-                        Berawal dari sebuah pertemuan sederhana,
-                        dua orang asing mulai mengenal satu sama lain
-                        dan menemukan banyak kesamaan.
-                    </p>
-
-                </div>
-
-            </div>
-
-
-            <div class="timeline-item reveal">
-
-                <div class="timeline-year">
-                    2023
-                </div>
-
-                <div class="timeline-content">
-
-                    <h3>
-                        Growing Together
-                    </h3>
-
-                    <p>
-                        Waktu mengajarkan kami bahwa hubungan bukan
-                        hanya tentang menemukan seseorang yang tepat,
-                        tetapi juga tumbuh bersama.
-                    </p>
-
-                </div>
-
-            </div>
-
-
-            <div class="timeline-item reveal">
-
-                <div class="timeline-year">
-                    2025
-                </div>
-
-                <div class="timeline-content">
-
-                    <h3>
-                        The Promise
-                    </h3>
-
-                    <p>
-                        Kami memutuskan untuk melangkah lebih jauh
-                        dan mengikat janji untuk menjalani kehidupan
-                        bersama.
-                    </p>
-
-                </div>
-
-            </div>
-
-
-            <div class="timeline-item reveal">
-
-                <div class="timeline-year">
-                    2026
-                </div>
-
-                <div class="timeline-content">
-
-                    <h3>
-                        Forever Begins
-                    </h3>
-
-                    <p>
-                        Hari ketika cerita kami memasuki babak baru.
-                        A new chapter, a lifetime together.
-                    </p>
-
-                </div>
-
-            </div>
-
-        </div>
-
-    </div>
-
-</section>
-
-
-<!-- =====================================================
-     COUNTDOWN
-===================================================== -->
-
-<section class="countdown-section">
-
-    <div class="container">
-
-        <div class="section-heading reveal">
-
-            <p class="eyebrow">
-                SAVE THE DATE
-            </p>
-
-            <h2>
-                Counting Down To Forever
-            </h2>
-
-            <div class="gold-line"></div>
-
-        </div>
-
-
-        <div class="countdown reveal">
+        <div class="countdown">
 
             <div class="count-box">
-
-                <strong id="days">
-                    00
-                </strong>
-
-                <span>
-                    DAYS
-                </span>
-
+                <strong id="days">00</strong>
+                <span>Days</span>
             </div>
-
-
-            <div class="count-separator">
-                :
-            </div>
-
 
             <div class="count-box">
-
-                <strong id="hours">
-                    00
-                </strong>
-
-                <span>
-                    HOURS
-                </span>
-
+                <strong id="hours">00</strong>
+                <span>Hours</span>
             </div>
-
-
-            <div class="count-separator">
-                :
-            </div>
-
 
             <div class="count-box">
-
-                <strong id="minutes">
-                    00
-                </strong>
-
-                <span>
-                    MINUTES
-                </span>
-
+                <strong id="minutes">00</strong>
+                <span>Minutes</span>
             </div>
-
-
-            <div class="count-separator">
-                :
-            </div>
-
 
             <div class="count-box">
-
-                <strong id="seconds">
-                    00
-                </strong>
-
-                <span>
-                    SECONDS
-                </span>
-
+                <strong id="seconds">00</strong>
+                <span>Seconds</span>
             </div>
 
         </div>
@@ -546,284 +319,216 @@
      EVENT
 ===================================================== -->
 
-<section class="event-section">
+<section class="section event-section">
 
-    <div class="container">
+    <div class="section-heading">
 
-        <div class="section-heading reveal">
+        <p class="eyebrow">
+            WEDDING EVENTS
+        </p>
 
-            <p class="eyebrow">
-                JOIN US
-            </p>
-
-            <h2>
-                Wedding Celebration
-            </h2>
-
-            <div class="gold-line"></div>
-
-            <p>
-                Dengan penuh sukacita, kami menantikan
-                kehadiran Anda di hari bahagia kami.
-            </p>
-
-        </div>
-
-
-        <div class="event-grid">
-
-
-            <!-- AKAD -->
-
-            <div class="event-card reveal">
-
-                <div class="event-icon">
-                    ♡
-                </div>
-
-                <p class="event-type">
-                    THE CEREMONY
-                </p>
-
-                <h3>
-                    Akad Nikah
-                </h3>
-
-                <div class="event-line"></div>
-
-                <p>
-                    Saturday
-                    <br>
-                    <strong>
-                        12 December 2026
-                    </strong>
-                </p>
-
-                <p>
-                    08.00 — 10.00 WIB
-                </p>
-
-                <p class="event-place">
-                    Grand Wedding Hall
-                    <br>
-                    Central Java
-                </p>
-
-            </div>
-
-
-            <!-- RECEPTION -->
-
-            <div class="event-card featured reveal">
-
-                <div class="event-icon">
-                    ✦
-                </div>
-
-                <p class="event-type">
-                    THE CELEBRATION
-                </p>
-
-                <h3>
-                    Wedding Reception
-                </h3>
-
-                <div class="event-line"></div>
-
-                <p>
-                    Saturday
-                    <br>
-                    <strong>
-                        12 December 2026
-                    </strong>
-                </p>
-
-                <p>
-                    11.00 — 14.00 WIB
-                </p>
-
-                <p class="event-place">
-                    Grand Wedding Hall
-                    <br>
-                    Central Java
-                </p>
-
-            </div>
-
-        </div>
-
-
-        <div class="map-button reveal">
-
-            <a
-                href="https://www.google.com/maps"
-                target="_blank"
-                rel="noopener"
-                class="gold-button map-link"
-            >
-                VIEW LOCATION
-            </a>
-
-        </div>
+        <h2>
+            Save Our
+            <em>Special Day</em>
+        </h2>
 
     </div>
 
-</section>
 
+    <div class="event-grid">
 
-<!-- =====================================================
-     GALLERY
-===================================================== -->
+        <article class="event-card">
 
-<section class="gallery-section">
+            <div class="event-icon">
+                ♡
+            </div>
 
-    <div class="container">
-
-        <div class="section-heading reveal">
-
-            <p class="eyebrow">
-                OUR MOMENTS
+            <p class="event-type">
+                AKAD NIKAH
             </p>
 
-            <h2>
-                A Glimpse Of Us
-            </h2>
-
-            <div class="gold-line"></div>
-
-        </div>
-
-
-        <div class="gallery">
-
-
-            <div class="gallery-item reveal">
-
-                <img
-                    src="https://images.unsplash.com/photo-1519741497674-611481863552?auto=format&fit=crop&w=900&q=80"
-                    alt="Wedding moment"
-                    loading="lazy"
-                >
-
-            </div>
-
-
-            <div class="gallery-item tall reveal">
-
-                <img
-                    src="https://images.unsplash.com/photo-1606800052052-a08af7148866?auto=format&fit=crop&w=900&q=80"
-                    alt="Wedding couple"
-                    loading="lazy"
-                >
-
-            </div>
-
-
-            <div class="gallery-item reveal">
-
-                <img
-                    src="https://images.unsplash.com/photo-1465495976277-4387d4b0e4a6?auto=format&fit=crop&w=900&q=80"
-                    alt="Wedding flowers"
-                    loading="lazy"
-                >
-
-            </div>
-
-
-            <div class="gallery-item reveal">
-
-                <img
-                    src="https://images.unsplash.com/photo-1511285560929-80b456fea0bc?auto=format&fit=crop&w=900&q=80"
-                    alt="Wedding celebration"
-                    loading="lazy"
-                >
-
-            </div>
-
-
-            <div class="gallery-item reveal">
-
-                <img
-                    src="https://images.unsplash.com/photo-1519225421980-715cb0215aed?auto=format&fit=crop&w=900&q=80"
-                    alt="Wedding table"
-                    loading="lazy"
-                >
-
-            </div>
-
-
-            <div class="gallery-item reveal">
-
-                <img
-                    src="https://images.unsplash.com/photo-1519167758481-83f550bb49b3?auto=format&fit=crop&w=900&q=80"
-                    alt="Wedding reception"
-                    loading="lazy"
-                >
-
-            </div>
-
-        </div>
-
-    </div>
-
-</section>
-
-
-<!-- =====================================================
-     WEDDING GIFT
-===================================================== -->
-
-<section class="gift-section">
-
-    <div class="container">
-
-        <div class="section-heading light reveal">
-
-            <p class="eyebrow">
-                WEDDING GIFT
-            </p>
-
-            <h2>
-                Your Presence Is Our Gift
-            </h2>
-
-            <div class="gold-line"></div>
-
-            <p>
-                Doa dan kehadiran Anda merupakan kebahagiaan
-                terbesar bagi kami. Namun apabila ingin memberikan
-                tanda kasih, dapat melalui:
-            </p>
-
-        </div>
-
-
-        <div class="gift-card reveal">
-
-            <div class="bank-logo">
-                BANK
-            </div>
-
-            <p class="account-name">
-                Rizuka Denn
-            </p>
-
-            <h3 id="accountNumber">
-                1234567890
+            <h3>
+                Sabtu
             </h3>
 
-            <button
-                class="copy-button"
-                type="button"
-                onclick="copyAccount()"
-            >
-                COPY ACCOUNT NUMBER
-            </button>
+            <h4>
+                12 Desember 2026
+            </h4>
 
-            <p
-                id="copyMessage"
-                class="copy-message"
-            ></p>
+            <div class="event-divider"></div>
+
+            <p>
+                08.00 WIB
+            </p>
+
+            <p>
+                Kediaman Mempelai Wanita
+                <br>
+                Jl. Contoh No. 123
+                <br>
+                Indonesia
+            </p>
+
+            <a
+                href="https://maps.google.com"
+                target="_blank"
+                rel="noopener"
+                class="btn-outline"
+            >
+                Lihat Lokasi
+            </a>
+
+        </article>
+
+
+        <article class="event-card">
+
+            <div class="event-icon">
+                ✦
+            </div>
+
+            <p class="event-type">
+                RESEPSI
+            </p>
+
+            <h3>
+                Sabtu
+            </h3>
+
+            <h4>
+                12 Desember 2026
+            </h4>
+
+            <div class="event-divider"></div>
+
+            <p>
+                11.00 - 14.00 WIB
+            </p>
+
+            <p>
+                Gedung Pernikahan
+                <br>
+                Jl. Contoh No. 456
+                <br>
+                Indonesia
+            </p>
+
+            <a
+                href="https://maps.google.com"
+                target="_blank"
+                rel="noopener"
+                class="btn-outline"
+            >
+                Lihat Lokasi
+            </a>
+
+        </article>
+
+    </div>
+
+</section>
+
+
+<!-- =====================================================
+     STORY
+===================================================== -->
+
+<section class="section story-section">
+
+    <div class="section-heading">
+
+        <p class="eyebrow">
+            OUR STORY
+        </p>
+
+        <h2>
+            A Little Bit of
+            <em>Our Story</em>
+        </h2>
+
+    </div>
+
+
+    <div class="story-timeline">
+
+        <div class="story-item">
+
+            <span class="story-number">
+                01
+            </span>
+
+            <div>
+
+                <p class="story-year">
+                    FIRST MEET
+                </p>
+
+                <h3>
+                    Pertemuan Pertama
+                </h3>
+
+                <p>
+                    Semua cerita indah selalu dimulai
+                    dari sebuah pertemuan sederhana.
+                    Dari sana, sebuah cerita baru
+                    perlahan tumbuh.
+                </p>
+
+            </div>
+
+        </div>
+
+
+        <div class="story-item">
+
+            <span class="story-number">
+                02
+            </span>
+
+            <div>
+
+                <p class="story-year">
+                    OUR JOURNEY
+                </p>
+
+                <h3>
+                    Menjalani Bersama
+                </h3>
+
+                <p>
+                    Hari demi hari kami lalui bersama,
+                    belajar memahami, saling mendukung,
+                    dan tumbuh menjadi lebih baik.
+                </p>
+
+            </div>
+
+        </div>
+
+
+        <div class="story-item">
+
+            <span class="story-number">
+                03
+            </span>
+
+            <div>
+
+                <p class="story-year">
+                    THE PROMISE
+                </p>
+
+                <h3>
+                    Sebuah Janji
+                </h3>
+
+                <p>
+                    Hingga akhirnya kami memutuskan
+                    untuk mengikat janji dan melanjutkan
+                    perjalanan ini sebagai satu keluarga.
+                </p>
+
+            </div>
 
         </div>
 
@@ -836,46 +541,60 @@
      RSVP
 ===================================================== -->
 
-<section class="rsvp-section">
+<section
+    id="rsvp"
+    class="section rsvp-section"
+>
 
-    <div class="container">
+    <div class="rsvp-card">
 
-        <div class="section-heading reveal">
+        <div class="section-heading">
 
             <p class="eyebrow">
                 RSVP
             </p>
 
             <h2>
-                Will You Join Us?
+                Konfirmasi
+                <em>Kehadiran</em>
             </h2>
 
-            <div class="gold-line"></div>
-
             <p>
-                Mohon konfirmasi kehadiran Anda.
+                Mohon konfirmasi kehadiran Anda
+                agar kami dapat mempersiapkan
+                hari istimewa ini dengan lebih baik.
             </p>
 
         </div>
 
 
+        <!--
+            FORM RSVP
+
+            Form dikirim langsung ke Google Apps Script
+            menggunakan iframe agar tidak terkena CORS.
+        -->
+
         <form
             id="rsvpForm"
-            class="rsvp-form reveal"
+            action="https://script.google.com/macros/s/AKfycbxS1suysupUJSWoaGPXjSlrJw0h0FGq4XwxNjyrTsF1g4xvZZAajZTqklbpgS2dVJCtBg/exec"
+            method="POST"
+            target="rsvpFrame"
         >
 
             <div class="form-group">
 
-                <label for="guestName">
-                    NAMA
+                <label for="nama">
+                    Nama Lengkap
                 </label>
 
                 <input
                     type="text"
-                    id="guestName"
-                    placeholder="Nama Anda"
-                    autocomplete="name"
+                    id="nama"
+                    name="nama"
+                    placeholder="Masukkan nama Anda"
                     required
+                    maxlength="100"
                 >
 
             </div>
@@ -883,12 +602,13 @@
 
             <div class="form-group">
 
-                <label for="attendance">
-                    KEHADIRAN
+                <label for="kehadiran">
+                    Kehadiran
                 </label>
 
                 <select
-                    id="attendance"
+                    id="kehadiran"
+                    name="kehadiran"
                     required
                 >
 
@@ -911,11 +631,19 @@
 
             <div class="form-group">
 
-                <label for="guestCount">
-                    JUMLAH TAMU
+                <label for="jumlahTamu">
+                    Jumlah Tamu
                 </label>
 
-                <select id="guestCount">
+                <select
+                    id="jumlahTamu"
+                    name="jumlahTamu"
+                    required
+                >
+
+                    <option value="">
+                        Pilih jumlah
+                    </option>
 
                     <option value="1">
                         1 Orang
@@ -925,6 +653,18 @@
                         2 Orang
                     </option>
 
+                    <option value="3">
+                        3 Orang
+                    </option>
+
+                    <option value="4">
+                        4 Orang
+                    </option>
+
+                    <option value="5">
+                        5 Orang
+                    </option>
+
                 </select>
 
             </div>
@@ -932,14 +672,16 @@
 
             <div class="form-group">
 
-                <label for="guestMessage">
-                    UCAPAN & DOA
+                <label for="ucapan">
+                    Ucapan & Doa
                 </label>
 
                 <textarea
-                    id="guestMessage"
-                    rows="4"
-                    placeholder="Tuliskan ucapan untuk kami..."
+                    id="ucapan"
+                    name="ucapan"
+                    rows="5"
+                    maxlength="1000"
+                    placeholder="Tuliskan ucapan dan doa terbaik Anda..."
                 ></textarea>
 
             </div>
@@ -947,30 +689,52 @@
 
             <button
                 type="submit"
-                class="gold-button submit-button"
+                id="submitRsvp"
+                class="btn-primary submit-button"
             >
-                SEND RSVP
+                <span>♡</span>
+                Kirim RSVP
             </button>
 
         </form>
 
 
+        <!-- Iframe tersembunyi untuk Google Apps Script -->
+
+        <iframe
+            name="rsvpFrame"
+            id="rsvpFrame"
+            class="hidden-frame"
+        ></iframe>
+
+
+        <!-- Status RSVP -->
+
         <div
             id="rsvpSuccess"
-            class="success-message"
+            class="rsvp-success"
         >
 
-            <span>
-                ♡
-            </span>
+            <div class="success-icon">
+                ✓
+            </div>
 
             <h3>
-                Thank You!
+                Terima Kasih
             </h3>
 
             <p>
-                Konfirmasi dan ucapan Anda telah diterima.
+                Konfirmasi kehadiran Anda telah berhasil
+                dikirim. Kami sangat menghargai kehadiran
+                dan doa terbaik Anda.
             </p>
+
+            <button
+                id="whatsappButton"
+                class="btn-whatsapp"
+            >
+                Kirim Konfirmasi ke WhatsApp
+            </button>
 
         </div>
 
@@ -980,32 +744,35 @@
 
 
 <!-- =====================================================
-     CLOSING
+     GUEST BOOK
 ===================================================== -->
 
-<section class="closing-section">
+<section class="section wishes-section">
 
-    <div class="container reveal">
+    <div class="section-heading">
 
         <p class="eyebrow">
-            SEE YOU ON OUR SPECIAL DAY
+            WITH LOVE
         </p>
 
         <h2>
-            Rizuka
-            <span>&</span>
-            Denn
+            Doa & Ucapan
         </h2>
 
-        <div class="gold-line"></div>
-
         <p>
-            Thank you for being part of our story.
+            Terima kasih telah menjadi bagian
+            dari perjalanan cinta kami.
         </p>
 
-        <div class="heart">
-            ♡
-        </div>
+    </div>
+
+    <div class="floating-hearts">
+
+        <span>♡</span>
+        <span>♡</span>
+        <span>✦</span>
+        <span>♡</span>
+        <span>✦</span>
 
     </div>
 
@@ -1018,13 +785,19 @@
 
 <footer>
 
-    <p>
-        Made with ♡ for Rizuka & Denn
+    <p class="footer-names">
+        Rizuka <span>&</span> Denn
     </p>
 
     <p>
-        © 2026 Wedding Invitation
+        Thank you for being part of our special day.
     </p>
+
+    <div class="footer-line"></div>
+
+    <small>
+        Made with ♡ for our special day
+    </small>
 
 </footer>
 
@@ -1033,33 +806,16 @@
 
 
 <!-- =====================================================
-     LIGHTBOX
+     TOAST
 ===================================================== -->
 
 <div
-    id="lightbox"
-    class="lightbox"
-    aria-hidden="true"
+    id="toast"
+    class="toast"
 >
-
-    <button
-        id="closeLightbox"
-        type="button"
-        aria-label="Close gallery"
-    >
-        ×
-    </button>
-
-    <img
-        id="lightboxImage"
-        src=""
-        alt="Gallery preview"
-    >
-
+    RSVP berhasil dikirim ♡
 </div>
 
-
-<!-- JAVASCRIPT -->
 
 <script src="script.js"></script>
 
