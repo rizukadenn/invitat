@@ -1,5 +1,5 @@
 /* =====================================================
-   LUXURY WEDDING INVITATION
+   ROYAL IVORY & GOLD WEDDING
    JAVASCRIPT
 ===================================================== */
 
@@ -8,193 +8,139 @@
    ELEMENTS
 ===================================================== */
 
-const loader =
-    document.getElementById("loader");
+const openingScreen =
+    document.getElementById("openingScreen");
 
-const opening =
-    document.getElementById("opening");
-
-const main =
-    document.getElementById("main");
-
-const envelope =
-    document.getElementById("envelope");
-
-const openBtn =
-    document.getElementById("openBtn");
+const openInvitation =
+    document.getElementById("openInvitation");
 
 const music =
-    document.getElementById("music");
+    document.getElementById("weddingMusic");
 
-const musicBtn =
-    document.getElementById("musicBtn");
+const musicButton =
+    document.getElementById("musicButton");
 
-const toast =
-    document.getElementById("toast");
-
-const topBtn =
-    document.getElementById("topBtn");
-
-const shareBtn =
-    document.getElementById("shareBtn");
+const mainContent =
+    document.getElementById("mainContent");
 
 
 /* =====================================================
-   INITIAL
+   INITIAL STATE
 ===================================================== */
 
 document.body.classList.add("locked");
 
 
 /* =====================================================
-   LOADING
-===================================================== */
-
-window.addEventListener(
-    "load",
-    function () {
-
-        setTimeout(
-            function () {
-
-                loader.classList.add("hide");
-
-            },
-            1500
-        );
-
-    }
-);
-
-
-/* =====================================================
    OPEN INVITATION
 ===================================================== */
 
-let opened = false;
+openInvitation.addEventListener(
+    "click",
+    async function () {
 
-function openInvitation() {
+        openingScreen.classList.add("hidden");
 
-    if (opened) {
-        return;
-    }
+        document.body.classList.remove("locked");
 
-    opened = true;
+        musicButton.classList.add("active");
 
-    envelope.classList.add("open");
 
-    openBtn.innerHTML =
-        "<span>OPENING...</span><i>✦</i>";
+        /*
+         * Musik dimulai setelah user menekan tombol.
+         * Ini penting karena browser biasanya memblokir
+         * autoplay audio tanpa interaksi pengguna.
+         */
 
-    createConfetti();
+        try {
 
-    setTimeout(
-        function () {
+            music.volume = 0.35;
 
-            opening.classList.add("closed");
+            await music.play();
 
-            main.classList.add("visible");
+            musicButton.classList.remove("paused");
 
-            document.body.classList.remove(
-                "locked"
+            musicButton.innerHTML = "♪";
+
+        }
+
+        catch (error) {
+
+            console.log(
+                "Musik belum dapat dimainkan:",
+                error
             );
 
-            openBtn.innerHTML =
-                "<span>INVITATION OPENED</span><i>✓</i>";
+            musicButton.classList.add("paused");
+
+            musicButton.innerHTML = "▶";
+
+        }
+
+
+        /*
+         * Scroll sedikit ke halaman utama
+         * setelah opening selesai.
+         */
+
+        setTimeout(function () {
 
             window.scrollTo({
+
                 top: 0,
+
                 behavior: "smooth"
+
             });
 
-            startMusic();
+        }, 400);
 
-        },
-        1300
-    );
-
-}
-
-
-envelope.addEventListener(
-    "click",
-    openInvitation
-);
-
-openBtn.addEventListener(
-    "click",
-    openInvitation
+    }
 );
 
 
 /* =====================================================
-   MUSIC
+   MUSIC TOGGLE
 ===================================================== */
 
-function startMusic() {
-
-    if (!music.querySelector("source")) {
-        return;
-    }
-
-    music
-        .play()
-        .then(
-            function () {
-
-                musicBtn.classList.add(
-                    "playing"
-                );
-
-            }
-        )
-        .catch(
-            function () {
-
-                console.log(
-                    "Autoplay blocked."
-                );
-
-            }
-        );
-
-}
-
-
-musicBtn.addEventListener(
+musicButton.addEventListener(
     "click",
-    function () {
+    async function () {
 
         if (music.paused) {
 
-            music
-                .play()
-                .then(
-                    function () {
+            try {
 
-                        musicBtn.classList.add(
-                            "playing"
-                        );
+                await music.play();
 
-                    }
-                )
-                .catch(
-                    function () {
-
-                        showToast(
-                            "Tambahkan file musik terlebih dahulu."
-                        );
-
-                    }
+                musicButton.classList.remove(
+                    "paused"
                 );
 
-        } else {
+                musicButton.innerHTML = "♪";
+
+            }
+
+            catch (error) {
+
+                console.log(
+                    "Tidak dapat memutar musik:",
+                    error
+                );
+
+            }
+
+        }
+
+        else {
 
             music.pause();
 
-            musicBtn.classList.remove(
-                "playing"
+            musicButton.classList.add(
+                "paused"
             );
+
+            musicButton.innerHTML = "Ⅱ";
 
         }
 
@@ -206,24 +152,25 @@ musicBtn.addEventListener(
    COUNTDOWN
 ===================================================== */
 
+
 /*
-==========================================================
-EDIT DI SINI
-
-Format:
-
-YYYY-MM-DDTHH:MM:SS
-
-Contoh:
-
-2026-12-20T08:00:00
-
-==========================================================
-*/
+ * =====================================================
+ * GANTI TANGGAL PERNIKAHAN DI SINI
+ * =====================================================
+ *
+ * Format:
+ *
+ * YYYY-MM-DDTHH:MM:SS
+ *
+ * Contoh:
+ *
+ * 2026-12-12T08:00:00
+ *
+ */
 
 const weddingDate =
     new Date(
-        "2026-12-20T08:00:00"
+        "2026-12-12T08:00:00"
     ).getTime();
 
 
@@ -238,12 +185,21 @@ function updateCountdown() {
 
     if (distance <= 0) {
 
-        setCountdown(
-            0,
-            0,
-            0,
-            0
-        );
+        document.getElementById(
+            "days"
+        ).innerText = "00";
+
+        document.getElementById(
+            "hours"
+        ).innerText = "00";
+
+        document.getElementById(
+            "minutes"
+        ).innerText = "00";
+
+        document.getElementById(
+            "seconds"
+        ).innerText = "00";
 
         return;
 
@@ -262,7 +218,8 @@ function updateCountdown() {
             (
                 distance %
                 (1000 * 60 * 60 * 24)
-            ) /
+            )
+            /
             (1000 * 60 * 60)
         );
 
@@ -272,7 +229,8 @@ function updateCountdown() {
             (
                 distance %
                 (1000 * 60 * 60)
-            ) /
+            )
+            /
             (1000 * 60)
         );
 
@@ -282,62 +240,34 @@ function updateCountdown() {
             (
                 distance %
                 (1000 * 60)
-            ) /
+            )
+            /
             1000
         );
 
 
-    setCountdown(
-        days,
-        hours,
-        minutes,
-        seconds
-    );
-
-}
-
-
-function setCountdown(
-    days,
-    hours,
-    minutes,
-    seconds
-) {
-
     document.getElementById(
         "days"
-    ).textContent =
-        String(days).padStart(
-            2,
-            "0"
-        );
+    ).innerText =
+        String(days).padStart(2, "0");
 
 
     document.getElementById(
         "hours"
-    ).textContent =
-        String(hours).padStart(
-            2,
-            "0"
-        );
+    ).innerText =
+        String(hours).padStart(2, "0");
 
 
     document.getElementById(
         "minutes"
-    ).textContent =
-        String(minutes).padStart(
-            2,
-            "0"
-        );
+    ).innerText =
+        String(minutes).padStart(2, "0");
 
 
     document.getElementById(
         "seconds"
-    ).textContent =
-        String(seconds).padStart(
-            2,
-            "0"
-        );
+    ).innerText =
+        String(seconds).padStart(2, "0");
 
 }
 
@@ -355,13 +285,12 @@ setInterval(
 ===================================================== */
 
 const revealElements =
-    document.querySelectorAll(
-        ".reveal"
-    );
+    document.querySelectorAll(".reveal");
 
 
 const revealObserver =
     new IntersectionObserver(
+
         function (entries) {
 
             entries.forEach(
@@ -372,7 +301,7 @@ const revealObserver =
                     ) {
 
                         entry.target.classList.add(
-                            "active"
+                            "visible"
                         );
 
                         revealObserver.unobserve(
@@ -385,9 +314,11 @@ const revealObserver =
             );
 
         },
+
         {
             threshold: 0.12
         }
+
     );
 
 
@@ -406,9 +337,9 @@ revealElements.forEach(
    GALLERY LIGHTBOX
 ===================================================== */
 
-const galleryImages =
+const galleryItems =
     document.querySelectorAll(
-        ".gallery-image img"
+        ".gallery-item"
     );
 
 const lightbox =
@@ -427,19 +358,35 @@ const closeLightbox =
     );
 
 
-galleryImages.forEach(
-    function (image) {
+galleryItems.forEach(
+    function (item) {
 
-        image.parentElement.addEventListener(
+        item.addEventListener(
             "click",
             function () {
+
+                const image =
+                    item.querySelector(
+                        "img"
+                    );
+
+                if (!image) return;
+
 
                 lightboxImage.src =
                     image.src;
 
+
                 lightbox.classList.add(
-                    "active"
+                    "show"
                 );
+
+
+                lightbox.setAttribute(
+                    "aria-hidden",
+                    "false"
+                );
+
 
                 document.body.classList.add(
                     "locked"
@@ -452,18 +399,9 @@ galleryImages.forEach(
 );
 
 
-function closeGallery() {
-
-    lightbox.classList.remove(
-        "active"
-    );
-
-    document.body.classList.remove(
-        "locked"
-    );
-
-}
-
+/* =====================================================
+   CLOSE LIGHTBOX
+===================================================== */
 
 closeLightbox.addEventListener(
     "click",
@@ -476,8 +414,48 @@ lightbox.addEventListener(
     function (event) {
 
         if (
-            event.target ===
-            lightbox
+            event.target === lightbox
+        ) {
+
+            closeGallery();
+
+        }
+
+    }
+);
+
+
+function closeGallery() {
+
+    lightbox.classList.remove(
+        "show"
+    );
+
+    lightbox.setAttribute(
+        "aria-hidden",
+        "true"
+    );
+
+    document.body.classList.remove(
+        "locked"
+    );
+
+}
+
+
+/* =====================================================
+   ESC KEY
+===================================================== */
+
+document.addEventListener(
+    "keydown",
+    function (event) {
+
+        if (
+            event.key === "Escape" &&
+            lightbox.classList.contains(
+                "show"
+            )
         ) {
 
             closeGallery();
@@ -489,69 +467,137 @@ lightbox.addEventListener(
 
 
 /* =====================================================
-   COPY ACCOUNT
+   COPY BANK ACCOUNT
 ===================================================== */
 
-const copyButtons =
-    document.querySelectorAll(
-        ".copy-account"
-    );
+function copyAccount() {
+
+    const accountElement =
+        document.getElementById(
+            "accountNumber"
+        );
+
+    const message =
+        document.getElementById(
+            "copyMessage"
+        );
 
 
-copyButtons.forEach(
-    function (button) {
-
-        button.addEventListener(
-            "click",
-            async function () {
-
-                const account =
-                    button.dataset.account;
+    if (!accountElement) return;
 
 
-                try {
+    const accountNumber =
+        accountElement.innerText.trim();
 
-                    await navigator
-                        .clipboard
-                        .writeText(account);
 
-                    showToast(
-                        "Nomor rekening berhasil disalin."
-                    );
+    /*
+     * Modern clipboard API
+     */
 
-                } catch (error) {
+    if (
+        navigator.clipboard &&
+        window.isSecureContext
+    ) {
 
-                    const textarea =
-                        document.createElement(
-                            "textarea"
-                        );
+        navigator.clipboard
+            .writeText(accountNumber)
+            .then(function () {
 
-                    textarea.value =
-                        account;
+                showCopySuccess(
+                    message
+                );
 
-                    document.body.appendChild(
-                        textarea
-                    );
+            })
+            .catch(function () {
 
-                    textarea.select();
+                fallbackCopy(
+                    accountNumber,
+                    message
+                );
 
-                    document.execCommand(
-                        "copy"
-                    );
+            });
 
-                    textarea.remove();
+    }
 
-                    showToast(
-                        "Nomor rekening berhasil disalin."
-                    );
+    else {
 
-                }
-
-            }
+        fallbackCopy(
+            accountNumber,
+            message
         );
 
     }
-);
+
+}
+
+
+function fallbackCopy(
+    text,
+    message
+) {
+
+    const textarea =
+        document.createElement(
+            "textarea"
+        );
+
+    textarea.value = text;
+
+    textarea.style.position =
+        "fixed";
+
+    textarea.style.opacity =
+        "0";
+
+    document.body.appendChild(
+        textarea
+    );
+
+    textarea.select();
+
+    try {
+
+        document.execCommand(
+            "copy"
+        );
+
+        showCopySuccess(
+            message
+        );
+
+    }
+
+    catch (error) {
+
+        message.innerText =
+            "Silakan copy secara manual.";
+
+    }
+
+    document.body.removeChild(
+        textarea
+    );
+
+}
+
+
+function showCopySuccess(
+    message
+) {
+
+    message.innerText =
+        "✓ Account number copied";
+
+    setTimeout(
+        function () {
+
+            message.innerText = "";
+
+        },
+        2500
+    );
+
+}
 
 
 /* =====================================================
@@ -563,114 +609,10 @@ const rsvpForm =
         "rsvpForm"
     );
 
-const messagesContainer =
+const rsvpSuccess =
     document.getElementById(
-        "messages"
+        "rsvpSuccess"
     );
-
-
-let messages =
-    JSON.parse(
-        localStorage.getItem(
-            "luxuryWeddingMessages"
-        )
-    ) || [];
-
-
-function displayMessages() {
-
-    messagesContainer.innerHTML = "";
-
-
-    messages
-        .slice()
-        .reverse()
-        .forEach(
-            function (item) {
-
-                const message =
-                    document.createElement(
-                        "article"
-                    );
-
-                message.className =
-                    "message";
-
-
-                const head =
-                    document.createElement(
-                        "div"
-                    );
-
-                head.className =
-                    "message-head";
-
-
-                const name =
-                    document.createElement(
-                        "strong"
-                    );
-
-                name.className =
-                    "message-name";
-
-                name.textContent =
-                    item.name;
-
-
-                const status =
-                    document.createElement(
-                        "span"
-                    );
-
-                status.className =
-                    "message-status";
-
-                status.textContent =
-                    item.attendance;
-
-
-                const text =
-                    document.createElement(
-                        "p"
-                    );
-
-                text.className =
-                    "message-text";
-
-                text.textContent =
-                    item.message;
-
-
-                head.appendChild(
-                    name
-                );
-
-                head.appendChild(
-                    status
-                );
-
-
-                message.appendChild(
-                    head
-                );
-
-                message.appendChild(
-                    text
-                );
-
-
-                messagesContainer.appendChild(
-                    message
-                );
-
-            }
-        );
-
-}
-
-
-displayMessages();
 
 
 rsvpForm.addEventListener(
@@ -681,39 +623,36 @@ rsvpForm.addEventListener(
 
 
         const name =
-            document
-                .getElementById(
-                    "guestName"
-                )
-                .value
-                .trim();
+            document.getElementById(
+                "guestName"
+            ).value.trim();
 
 
         const attendance =
-            document
-                .getElementById(
-                    "guestAttendance"
-                )
-                .value;
+            document.getElementById(
+                "attendance"
+            ).value;
+
+
+        const guestCount =
+            document.getElementById(
+                "guestCount"
+            ).value;
 
 
         const message =
-            document
-                .getElementById(
-                    "guestMessage"
-                )
-                .value
-                .trim();
+            document.getElementById(
+                "guestMessage"
+            ).value.trim();
 
 
         if (
             !name ||
-            !attendance ||
-            !message
+            !attendance
         ) {
 
-            showToast(
-                "Mohon lengkapi semua data."
+            alert(
+                "Mohon lengkapi nama dan konfirmasi kehadiran."
             );
 
             return;
@@ -721,182 +660,97 @@ rsvpForm.addEventListener(
         }
 
 
-        const newMessage = {
+        /*
+         * Data RSVP lokal.
+         *
+         * Untuk sementara disimpan di browser.
+         *
+         * Pada tahap berikutnya bagian ini dapat
+         * dihubungkan ke Google Sheets + WhatsApp.
+         */
 
-            name:
-                name,
+        const rsvpData = {
 
-            attendance:
-                attendance,
+            name: name,
 
-            message:
-                message,
+            attendance: attendance,
 
-            created:
-                Date.now()
+            guests: guestCount,
+
+            message: message,
+
+            date:
+                new Date().toLocaleString(
+                    "id-ID"
+                )
 
         };
 
 
-        messages.push(
-            newMessage
-        );
-
-
         localStorage.setItem(
-            "luxuryWeddingMessages",
+            "weddingRSVP",
             JSON.stringify(
-                messages
+                rsvpData
             )
         );
 
 
-        displayMessages();
+        /*
+         * Tampilkan pesan sukses.
+         */
+
+        rsvpForm.style.display =
+            "none";
 
 
-        rsvpForm.reset();
-
-
-        showToast(
-            "Terima kasih atas ucapan Anda ♡"
+        rsvpSuccess.classList.add(
+            "show"
         );
 
 
-        createSmallConfetti();
-
-    }
-);
-
-
-/* =====================================================
-   TOAST
-===================================================== */
-
-let toastTimer;
-
-
-function showToast(text) {
-
-    toast.querySelector(
-        "p"
-    ).textContent =
-        text;
-
-
-    toast.classList.add(
-        "show"
-    );
-
-
-    clearTimeout(
-        toastTimer
-    );
-
-
-    toastTimer =
         setTimeout(
             function () {
 
-                toast.classList.remove(
-                    "show"
-                );
+                rsvpSuccess.scrollIntoView({
+                    behavior: "smooth",
+                    block: "center"
+                });
 
             },
-            2500
+            100
         );
-
-}
-
-
-/* =====================================================
-   SHARE
-===================================================== */
-
-shareBtn.addEventListener(
-    "click",
-    async function () {
-
-        const shareData = {
-
-            title:
-                "The Wedding of Arman & Aisyah",
-
-            text:
-                "Kami mengundang Anda untuk hadir di hari bahagia kami.",
-
-            url:
-                window.location.href
-
-        };
-
-
-        if (
-            navigator.share
-        ) {
-
-            try {
-
-                await navigator.share(
-                    shareData
-                );
-
-            } catch (error) {
-
-                console.log(
-                    "Share cancelled."
-                );
-
-            }
-
-        } else {
-
-            try {
-
-                await navigator
-                    .clipboard
-                    .writeText(
-                        window.location.href
-                    );
-
-                showToast(
-                    "Link undangan berhasil disalin."
-                );
-
-            } catch (error) {
-
-                showToast(
-                    "Silakan salin link dari browser."
-                );
-
-            }
-
-        }
 
     }
 );
 
 
 /* =====================================================
-   BACK TO TOP
+   HERO PARALLAX
 ===================================================== */
 
 window.addEventListener(
     "scroll",
     function () {
 
+        const hero =
+            document.querySelector(
+                ".hero"
+            );
+
+        if (!hero) return;
+
+
+        const scroll =
+            window.scrollY;
+
+
         if (
-            window.scrollY > 600
+            scroll <
+            window.innerHeight
         ) {
 
-            topBtn.classList.add(
-                "show"
-            );
-
-        } else {
-
-            topBtn.classList.remove(
-                "show"
-            );
+            hero.style.backgroundPosition =
+                `center ${scroll * 0.35}px`;
 
         }
 
@@ -904,417 +758,143 @@ window.addEventListener(
 );
 
 
-topBtn.addEventListener(
-    "click",
-    function () {
-
-        window.scrollTo({
-
-            top: 0,
-
-            behavior: "smooth"
-
-        });
-
-    }
-);
-
-
 /* =====================================================
-   CONFETTI
+   FLOATING PARTICLES
 ===================================================== */
 
-function createConfetti() {
+function createParticle() {
+
+    const particle =
+        document.createElement(
+            "span"
+        );
+
 
     const symbols = [
         "✦",
         "✧",
-        "◆",
         "♡",
-        "❀"
+        "·"
     ];
 
 
-    for (
-        let i = 0;
-        i < 100;
-        i++
-    ) {
-
-        const element =
-            document.createElement(
-                "div"
-            );
-
-
-        element.textContent =
-            symbols[
-                Math.floor(
-                    Math.random() *
-                    symbols.length
-                )
-            ];
-
-
-        element.style.position =
-            "fixed";
-
-        element.style.left =
-            Math.random() *
-            100 +
-            "vw";
-
-        element.style.top =
-            "-30px";
-
-        element.style.zIndex =
-            "15000";
-
-        element.style.pointerEvents =
-            "none";
-
-        element.style.fontSize =
-            Math.random() *
-            12 +
-            7 +
-            "px";
-
-        element.style.color =
-            Math.random() > 0.5
-                ? "#c9a96a"
-                : "#ffffff";
-
-        element.style.animation =
-            "luxuryConfetti " +
-            (
-                Math.random() * 3 +
-                3
-            ) +
-            "s linear forwards";
-
-
-        document.body.appendChild(
-            element
-        );
-
-
-        setTimeout(
-            function () {
-
-                element.remove();
-
-            },
-            7000
-        );
-
-    }
-
-}
-
-
-/* =====================================================
-   SMALL CONFETTI
-===================================================== */
-
-function createSmallConfetti() {
-
-    const symbols = [
-        "✦",
-        "♡",
-        "✧"
-    ];
-
-
-    for (
-        let i = 0;
-        i < 25;
-        i++
-    ) {
-
-        const element =
-            document.createElement(
-                "div"
-            );
-
-
-        element.textContent =
-            symbols[
-                Math.floor(
-                    Math.random() *
-                    symbols.length
-                )
-            ];
-
-
-        element.style.position =
-            "fixed";
-
-        element.style.left =
-            (
-                20 +
-                Math.random() * 60
-            ) +
-            "vw";
-
-        element.style.top =
-            "50%";
-
-        element.style.zIndex =
-            "15000";
-
-        element.style.pointerEvents =
-            "none";
-
-        element.style.color =
-            "#c9a96a";
-
-        element.style.animation =
-            "luxuryConfetti " +
-            (
-                Math.random() * 2 +
-                2
-            ) +
-            "s linear forwards";
-
-
-        document.body.appendChild(
-            element
-        );
-
-
-        setTimeout(
-            function () {
-
-                element.remove();
-
-            },
-            5000
-        );
-
-    }
-
-}
-
-
-/* =====================================================
-   CONFETTI CSS
-===================================================== */
-
-const confettiStyle =
-    document.createElement(
-        "style"
-    );
-
-
-confettiStyle.innerHTML = `
-
-@keyframes luxuryConfetti {
-
-    0% {
-        transform:
-            translateY(0)
-            rotate(0deg);
-
-        opacity: 1;
-    }
-
-    100% {
-        transform:
-            translateY(110vh)
-            translateX(
-                ${Math.random() * 300 - 150}px
+    particle.innerText =
+        symbols[
+            Math.floor(
+                Math.random() *
+                symbols.length
             )
-            rotate(720deg);
+        ];
 
-        opacity: 0;
-    }
+
+    particle.style.position =
+        "fixed";
+
+    particle.style.left =
+        Math.random() * 100 + "%";
+
+    particle.style.bottom =
+        "-20px";
+
+    particle.style.zIndex =
+        "5";
+
+    particle.style.pointerEvents =
+        "none";
+
+    particle.style.color =
+        "#b9965b";
+
+    particle.style.opacity =
+        Math.random() * .5 + .2;
+
+    particle.style.fontSize =
+        Math.random() * 12 + 8 + "px";
+
+
+    const duration =
+        Math.random() * 8 + 8;
+
+
+    particle.style.transition =
+        `
+        transform ${duration}s linear,
+        opacity ${duration}s linear
+        `;
+
+
+    document.body.appendChild(
+        particle
+    );
+
+
+    setTimeout(
+        function () {
+
+            particle.style.transform =
+                `
+                translate(
+                    ${Math.random() * 120 - 60}px,
+                    -${window.innerHeight + 100}px
+                )
+                rotate(
+                    ${Math.random() * 360}deg
+                )
+                `;
+
+
+            particle.style.opacity =
+                "0";
+
+        },
+        100
+    );
+
+
+    setTimeout(
+        function () {
+
+            particle.remove();
+
+        },
+        duration * 1000 + 500
+    );
 
 }
 
-`;
 
-
-document.head.appendChild(
-    confettiStyle
+setInterval(
+    createParticle,
+    1200
 );
 
 
 /* =====================================================
-   GOLD PARTICLES
-===================================================== */
-
-const canvas =
-    document.getElementById(
-        "particles"
-    );
-
-const ctx =
-    canvas.getContext("2d");
-
-
-let particles = [];
-
-
-function resizeCanvas() {
-
-    canvas.width =
-        window.innerWidth;
-
-    canvas.height =
-        window.innerHeight;
-
-}
-
-
-resizeCanvas();
-
-
-window.addEventListener(
-    "resize",
-    resizeCanvas
-);
-
-
-function createParticles() {
-
-    particles = [];
-
-
-    const amount =
-        window.innerWidth < 600
-            ? 25
-            : 45;
-
-
-    for (
-        let i = 0;
-        i < amount;
-        i++
-    ) {
-
-        particles.push({
-
-            x:
-                Math.random() *
-                canvas.width,
-
-            y:
-                Math.random() *
-                canvas.height,
-
-            radius:
-                Math.random() *
-                1.5 +
-                0.5,
-
-            speed:
-                Math.random() *
-                0.25 +
-                0.05,
-
-            opacity:
-                Math.random() *
-                0.5 +
-                0.1
-
-        });
-
-    }
-
-}
-
-
-createParticles();
-
-
-function animateParticles() {
-
-    ctx.clearRect(
-        0,
-        0,
-        canvas.width,
-        canvas.height
-    );
-
-
-    particles.forEach(
-        function (particle) {
-
-            particle.y -=
-                particle.speed;
-
-
-            if (
-                particle.y < 0
-            ) {
-
-                particle.y =
-                    canvas.height;
-
-                particle.x =
-                    Math.random() *
-                    canvas.width;
-
-            }
-
-
-            ctx.beginPath();
-
-            ctx.arc(
-                particle.x,
-                particle.y,
-                particle.radius,
-                0,
-                Math.PI * 2
-            );
-
-
-            ctx.fillStyle =
-                `rgba(
-                    201,
-                    169,
-                    106,
-                    ${particle.opacity}
-                )`;
-
-
-            ctx.fill();
-
-        }
-    );
-
-
-    requestAnimationFrame(
-        animateParticles
-    );
-
-}
-
-
-animateParticles();
-
-
-/* =====================================================
-   KEYBOARD ESCAPE
+   VISIBILITY
 ===================================================== */
 
 document.addEventListener(
-    "keydown",
-    function (event) {
+    "visibilitychange",
+    function () {
+
+        /*
+         * Jika pengunjung meninggalkan tab,
+         * musik dihentikan sementara.
+         */
 
         if (
-            event.key === "Escape"
+            document.hidden &&
+            !music.paused
         ) {
 
-            if (
-                lightbox.classList.contains(
-                    "active"
-                )
-            ) {
+            music.pause();
 
-                closeGallery();
+            musicButton.classList.add(
+                "paused"
+            );
 
-            }
+            musicButton.innerHTML =
+                "▶";
 
         }
 
@@ -1323,10 +903,41 @@ document.addEventListener(
 
 
 /* =====================================================
-   CONSOLE
+   DEBUG
 ===================================================== */
 
+music.addEventListener(
+    "error",
+    function () {
+
+        console.error(
+            "ERROR: File musik tidak ditemukan."
+        );
+
+        console.error(
+            "Pastikan file berada di:"
+        );
+
+        console.error(
+            "assets/Westlife_-_Beautifull_in_White_(mp3.pm).mp3"
+        );
+
+    }
+);
+
+
+music.addEventListener(
+    "canplay",
+    function () {
+
+        console.log(
+            "✓ Wedding music loaded successfully."
+        );
+
+    }
+);
+
+
 console.log(
-    "%c♡ Luxury Wedding Invitation ♡",
-    "color:#c9a96a;font-size:18px;"
+    "♡ Rizuka & Denn Wedding Invitation loaded."
 );
