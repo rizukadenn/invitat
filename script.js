@@ -1,7 +1,19 @@
 /* =====================================================
-   ROYAL IVORY & GOLD WEDDING
-   JAVASCRIPT
+   WEDDING WEBSITE
+   RIZUKA & DENN
 ===================================================== */
+
+
+/* =====================================================
+   CONFIGURATION
+===================================================== */
+
+const GOOGLE_SCRIPT_URL =
+    "https://script.google.com/macros/s/AKfycbxS1suysupUJSWoaGPXjSlrJw0h0FGq4XwxNjyrTsF1g4xvZZAajZTqklbpgS2dVJCtBg/exec";
+
+
+const WHATSAPP_NUMBER =
+    "6289526612634";
 
 
 /* =====================================================
@@ -10,6 +22,9 @@
 
 const openingScreen =
     document.getElementById("openingScreen");
+
+const mainContent =
+    document.getElementById("mainContent");
 
 const openInvitation =
     document.getElementById("openInvitation");
@@ -20,15 +35,37 @@ const music =
 const musicButton =
     document.getElementById("musicButton");
 
-const mainContent =
-    document.getElementById("mainContent");
+const rsvpForm =
+    document.getElementById("rsvpForm");
+
+const rsvpSuccess =
+    document.getElementById("rsvpSuccess");
+
+const submitRsvp =
+    document.getElementById("submitRsvp");
+
+const whatsappButton =
+    document.getElementById("whatsappButton");
+
+const toast =
+    document.getElementById("toast");
 
 
 /* =====================================================
-   INITIAL STATE
+   RSVP DATA
 ===================================================== */
 
-document.body.classList.add("locked");
+let lastRsvpData = {
+
+    nama: "",
+
+    kehadiran: "",
+
+    jumlahTamu: "",
+
+    ucapan: ""
+
+};
 
 
 /* =====================================================
@@ -37,112 +74,109 @@ document.body.classList.add("locked");
 
 openInvitation.addEventListener(
     "click",
-    async function () {
+    function () {
 
-        openingScreen.classList.add("hidden");
+        openingScreen.classList.add("hide");
+
+        mainContent.classList.remove("hidden");
 
         document.body.classList.remove("locked");
 
-        musicButton.classList.add("active");
-
-
         /*
-         * Musik dimulai setelah user menekan tombol.
-         * Ini penting karena browser biasanya memblokir
-         * autoplay audio tanpa interaksi pengguna.
+         * Musik mencoba diputar setelah user
+         * melakukan klik.
          */
 
-        try {
+        music
+            .play()
+            .then(function () {
 
-            music.volume = 0.35;
+                musicButton.classList.add("playing");
 
-            await music.play();
+            })
+            .catch(function () {
 
-            musicButton.classList.remove("paused");
-
-            musicButton.innerHTML = "♪";
-
-        }
-
-        catch (error) {
-
-            console.log(
-                "Musik belum dapat dimainkan:",
-                error
-            );
-
-            musicButton.classList.add("paused");
-
-            musicButton.innerHTML = "▶";
-
-        }
-
-
-        /*
-         * Scroll sedikit ke halaman utama
-         * setelah opening selesai.
-         */
-
-        setTimeout(function () {
-
-            window.scrollTo({
-
-                top: 0,
-
-                behavior: "smooth"
+                console.log(
+                    "Musik membutuhkan interaksi tambahan."
+                );
 
             });
 
-        }, 400);
+        /*
+         * Scroll ke atas.
+         */
+
+        window.scrollTo({
+            top: 0,
+            behavior: "instant"
+        });
 
     }
 );
 
 
 /* =====================================================
-   MUSIC TOGGLE
+   MUSIC BUTTON
 ===================================================== */
 
 musicButton.addEventListener(
     "click",
-    async function () {
+    function () {
 
         if (music.paused) {
 
-            try {
+            music
+                .play()
+                .then(function () {
 
-                await music.play();
+                    musicButton.classList.add(
+                        "playing"
+                    );
 
-                musicButton.classList.remove(
-                    "paused"
-                );
+                })
+                .catch(function (error) {
 
-                musicButton.innerHTML = "♪";
+                    console.log(error);
 
-            }
+                });
 
-            catch (error) {
-
-                console.log(
-                    "Tidak dapat memutar musik:",
-                    error
-                );
-
-            }
-
-        }
-
-        else {
+        } else {
 
             music.pause();
 
-            musicButton.classList.add(
-                "paused"
+            musicButton.classList.remove(
+                "playing"
             );
 
-            musicButton.innerHTML = "Ⅱ";
-
         }
+
+    }
+);
+
+
+/* =====================================================
+   MUSIC STATE
+===================================================== */
+
+music.addEventListener(
+    "play",
+    function () {
+
+        musicButton.classList.add(
+            "playing"
+        );
+
+    }
+);
+
+
+music.addEventListener(
+    "pause",
+    function () {
+
+        musicButton.classList.remove(
+            "playing"
+        );
 
     }
 );
@@ -152,25 +186,9 @@ musicButton.addEventListener(
    COUNTDOWN
 ===================================================== */
 
-
-/*
- * =====================================================
- * GANTI TANGGAL PERNIKAHAN DI SINI
- * =====================================================
- *
- * Format:
- *
- * YYYY-MM-DDTHH:MM:SS
- *
- * Contoh:
- *
- * 2026-12-12T08:00:00
- *
- */
-
 const weddingDate =
     new Date(
-        "2026-12-12T08:00:00"
+        "December 12, 2026 08:00:00"
     ).getTime();
 
 
@@ -185,21 +203,17 @@ function updateCountdown() {
 
     if (distance <= 0) {
 
-        document.getElementById(
-            "days"
-        ).innerText = "00";
+        document.getElementById("days")
+            .textContent = "00";
 
-        document.getElementById(
-            "hours"
-        ).innerText = "00";
+        document.getElementById("hours")
+            .textContent = "00";
 
-        document.getElementById(
-            "minutes"
-        ).innerText = "00";
+        document.getElementById("minutes")
+            .textContent = "00";
 
-        document.getElementById(
-            "seconds"
-        ).innerText = "00";
+        document.getElementById("seconds")
+            .textContent = "00";
 
         return;
 
@@ -215,58 +229,45 @@ function updateCountdown() {
 
     const hours =
         Math.floor(
-            (
-                distance %
-                (1000 * 60 * 60 * 24)
-            )
-            /
+            (distance %
+                (1000 * 60 * 60 * 24)) /
             (1000 * 60 * 60)
         );
 
 
     const minutes =
         Math.floor(
-            (
-                distance %
-                (1000 * 60 * 60)
-            )
-            /
+            (distance %
+                (1000 * 60 * 60)) /
             (1000 * 60)
         );
 
 
     const seconds =
         Math.floor(
-            (
-                distance %
-                (1000 * 60)
-            )
-            /
+            (distance %
+                (1000 * 60)) /
             1000
         );
 
 
-    document.getElementById(
-        "days"
-    ).innerText =
+    document.getElementById("days")
+        .textContent =
         String(days).padStart(2, "0");
 
 
-    document.getElementById(
-        "hours"
-    ).innerText =
+    document.getElementById("hours")
+        .textContent =
         String(hours).padStart(2, "0");
 
 
-    document.getElementById(
-        "minutes"
-    ).innerText =
+    document.getElementById("minutes")
+        .textContent =
         String(minutes).padStart(2, "0");
 
 
-    document.getElementById(
-        "seconds"
-    ).innerText =
+    document.getElementById("seconds")
+        .textContent =
         String(seconds).padStart(2, "0");
 
 }
@@ -281,16 +282,301 @@ setInterval(
 
 
 /* =====================================================
+   RSVP SUBMIT
+===================================================== */
+
+rsvpForm.addEventListener(
+    "submit",
+    function (event) {
+
+        /*
+         * Jangan reload halaman.
+         */
+
+        event.preventDefault();
+
+
+        /*
+         * Validasi form.
+         */
+
+        if (!rsvpForm.checkValidity()) {
+
+            rsvpForm.reportValidity();
+
+            return;
+
+        }
+
+
+        /*
+         * Ambil data.
+         */
+
+        const nama =
+            document.getElementById("nama")
+                .value
+                .trim();
+
+
+        const kehadiran =
+            document.getElementById("kehadiran")
+                .value;
+
+
+        const jumlahTamu =
+            document.getElementById("jumlahTamu")
+                .value;
+
+
+        const ucapan =
+            document.getElementById("ucapan")
+                .value
+                .trim();
+
+
+        /*
+         * Simpan untuk WhatsApp.
+         */
+
+        lastRsvpData = {
+
+            nama:
+                nama,
+
+            kehadiran:
+                kehadiran,
+
+            jumlahTamu:
+                jumlahTamu,
+
+            ucapan:
+                ucapan
+
+        };
+
+
+        /*
+         * Ubah tombol menjadi loading.
+         */
+
+        submitRsvp.disabled = true;
+
+        submitRsvp.innerHTML =
+            "<span>♡</span> Mengirim RSVP...";
+
+
+        /*
+         * Pastikan action form menggunakan
+         * Google Apps Script URL.
+         */
+
+        rsvpForm.action =
+            GOOGLE_SCRIPT_URL;
+
+
+        /*
+         * Submit form asli ke iframe.
+         *
+         * Ini membuat browser mengirim POST
+         * langsung ke Google Apps Script
+         * tanpa masalah CORS.
+         */
+
+        const hiddenSubmit =
+            document.createElement("button");
+
+        hiddenSubmit.type = "submit";
+
+        hiddenSubmit.style.display =
+            "none";
+
+        rsvpForm.appendChild(
+            hiddenSubmit
+        );
+
+
+        hiddenSubmit.click();
+
+
+        /*
+         * Beri sedikit waktu kepada browser
+         * untuk mengirim request.
+         */
+
+        setTimeout(
+            function () {
+
+                rsvpForm.style.display =
+                    "none";
+
+                rsvpSuccess.classList.add(
+                    "show"
+                );
+
+
+                submitRsvp.disabled =
+                    false;
+
+
+                submitRsvp.innerHTML =
+                    "<span>♡</span> Kirim RSVP";
+
+
+                showToast(
+                    "RSVP berhasil dikirim ♡"
+                );
+
+
+                hiddenSubmit.remove();
+
+            },
+            1200
+        );
+
+    }
+);
+
+
+/* =====================================================
+   WHATSAPP
+===================================================== */
+
+whatsappButton.addEventListener(
+    "click",
+    function () {
+
+        const nama =
+            lastRsvpData.nama ||
+            "-";
+
+
+        const kehadiran =
+            lastRsvpData.kehadiran ||
+            "-";
+
+
+        const jumlahTamu =
+            lastRsvpData.jumlahTamu ||
+            "-";
+
+
+        const ucapan =
+            lastRsvpData.ucapan ||
+            "-";
+
+
+        const message =
+
+`💍 WEDDING RSVP
+
+Halo, saya ingin mengonfirmasi kehadiran untuk acara pernikahan Rizuka & Denn.
+
+Nama:
+${nama}
+
+Kehadiran:
+${kehadiran}
+
+Jumlah Tamu:
+${jumlahTamu} orang
+
+Ucapan & Doa:
+${ucapan}
+
+Terima kasih 🤍`;
+
+
+        const whatsappURL =
+            "https://wa.me/" +
+            WHATSAPP_NUMBER +
+            "?text=" +
+            encodeURIComponent(message);
+
+
+        window.open(
+            whatsappURL,
+            "_blank"
+        );
+
+    }
+);
+
+
+/* =====================================================
+   TOAST
+===================================================== */
+
+function showToast(message) {
+
+    toast.textContent =
+        message;
+
+    toast.classList.add(
+        "show"
+    );
+
+
+    setTimeout(
+        function () {
+
+            toast.classList.remove(
+                "show"
+            );
+
+        },
+        3000
+    );
+
+}
+
+
+/* =====================================================
+   GUEST NAME FROM URL
+===================================================== */
+
+function getGuestName() {
+
+    const params =
+        new URLSearchParams(
+            window.location.search
+        );
+
+
+    const guest =
+        params.get("to");
+
+
+    if (guest) {
+
+        const decodedGuest =
+            decodeURIComponent(
+                guest.replace(
+                    /\+/g,
+                    " "
+                )
+            );
+
+
+        document.getElementById(
+            "guestName"
+        ).textContent =
+            decodedGuest;
+
+    }
+
+}
+
+
+getGuestName();
+
+
+/* =====================================================
    SCROLL REVEAL
 ===================================================== */
 
-const revealElements =
-    document.querySelectorAll(".reveal");
-
-
-const revealObserver =
+const observer =
     new IntersectionObserver(
-
         function (entries) {
 
             entries.forEach(
@@ -304,640 +590,51 @@ const revealObserver =
                             "visible"
                         );
 
-                        revealObserver.unobserve(
-                            entry.target
-                        );
-
                     }
 
                 }
             );
 
         },
-
         {
             threshold: 0.12
         }
-
     );
 
 
-revealElements.forEach(
-    function (element) {
-
-        revealObserver.observe(
-            element
-        );
-
-    }
-);
-
-
-/* =====================================================
-   GALLERY LIGHTBOX
-===================================================== */
-
-const galleryItems =
-    document.querySelectorAll(
-        ".gallery-item"
-    );
-
-const lightbox =
-    document.getElementById(
-        "lightbox"
-    );
-
-const lightboxImage =
-    document.getElementById(
-        "lightboxImage"
-    );
-
-const closeLightbox =
-    document.getElementById(
-        "closeLightbox"
-    );
-
-
-galleryItems.forEach(
-    function (item) {
-
-        item.addEventListener(
-            "click",
-            function () {
-
-                const image =
-                    item.querySelector(
-                        "img"
-                    );
-
-                if (!image) return;
-
-
-                lightboxImage.src =
-                    image.src;
-
-
-                lightbox.classList.add(
-                    "show"
-                );
-
-
-                lightbox.setAttribute(
-                    "aria-hidden",
-                    "false"
-                );
-
-
-                document.body.classList.add(
-                    "locked"
-                );
-
-            }
-        );
-
-    }
-);
-
-
-/* =====================================================
-   CLOSE LIGHTBOX
-===================================================== */
-
-closeLightbox.addEventListener(
-    "click",
-    closeGallery
-);
-
-
-lightbox.addEventListener(
-    "click",
-    function (event) {
-
-        if (
-            event.target === lightbox
-        ) {
-
-            closeGallery();
-
-        }
-
-    }
-);
-
-
-function closeGallery() {
-
-    lightbox.classList.remove(
-        "show"
-    );
-
-    lightbox.setAttribute(
-        "aria-hidden",
-        "true"
-    );
-
-    document.body.classList.remove(
-        "locked"
-    );
-
-}
-
-
-/* =====================================================
-   ESC KEY
-===================================================== */
-
-document.addEventListener(
-    "keydown",
-    function (event) {
-
-        if (
-            event.key === "Escape" &&
-            lightbox.classList.contains(
-                "show"
-            )
-        ) {
-
-            closeGallery();
-
-        }
-
-    }
-);
-
-
-/* =====================================================
-   COPY BANK ACCOUNT
-===================================================== */
-
-function copyAccount() {
-
-    const accountElement =
-        document.getElementById(
-            "accountNumber"
-        );
-
-    const message =
-        document.getElementById(
-            "copyMessage"
-        );
-
-
-    if (!accountElement) return;
-
-
-    const accountNumber =
-        accountElement.innerText.trim();
-
-
-    /*
-     * Modern clipboard API
-     */
-
-    if (
-        navigator.clipboard &&
-        window.isSecureContext
-    ) {
-
-        navigator.clipboard
-            .writeText(accountNumber)
-            .then(function () {
-
-                showCopySuccess(
-                    message
-                );
-
-            })
-            .catch(function () {
-
-                fallbackCopy(
-                    accountNumber,
-                    message
-                );
-
-            });
-
-    }
-
-    else {
-
-        fallbackCopy(
-            accountNumber,
-            message
-        );
-
-    }
-
-}
-
-
-function fallbackCopy(
-    text,
-    message
-) {
-
-    const textarea =
-        document.createElement(
-            "textarea"
-        );
-
-    textarea.value = text;
-
-    textarea.style.position =
-        "fixed";
-
-    textarea.style.opacity =
-        "0";
-
-    document.body.appendChild(
-        textarea
-    );
-
-    textarea.select();
-
-    try {
-
-        document.execCommand(
-            "copy"
-        );
-
-        showCopySuccess(
-            message
-        );
-
-    }
-
-    catch (error) {
-
-        message.innerText =
-            "Silakan copy secara manual.";
-
-    }
-
-    document.body.removeChild(
-        textarea
-    );
-
-}
-
-
-function showCopySuccess(
-    message
-) {
-
-    message.innerText =
-        "✓ Account number copied";
-
-    setTimeout(
-        function () {
-
-            message.innerText = "";
-
-        },
-        2500
-    );
-
-}
-
-
-/* =====================================================
-   RSVP
-===================================================== */
-
-const rsvpForm =
-    document.getElementById(
-        "rsvpForm"
-    );
-
-const rsvpSuccess =
-    document.getElementById(
-        "rsvpSuccess"
-    );
-
-
-rsvpForm.addEventListener(
-    "submit",
-    function (event) {
-
-        event.preventDefault();
-
-
-        const name =
-            document.getElementById(
-                "guestName"
-            ).value.trim();
-
-
-        const attendance =
-            document.getElementById(
-                "attendance"
-            ).value;
-
-
-        const guestCount =
-            document.getElementById(
-                "guestCount"
-            ).value;
-
-
-        const message =
-            document.getElementById(
-                "guestMessage"
-            ).value.trim();
-
-
-        if (
-            !name ||
-            !attendance
-        ) {
-
-            alert(
-                "Mohon lengkapi nama dan konfirmasi kehadiran."
+document
+    .querySelectorAll(
+        ".section-heading, .person-card, .event-card, .story-item, .rsvp-card"
+    )
+    .forEach(
+        function (element) {
+
+            observer.observe(
+                element
             );
 
-            return;
-
         }
-
-
-        /*
-         * Data RSVP lokal.
-         *
-         * Untuk sementara disimpan di browser.
-         *
-         * Pada tahap berikutnya bagian ini dapat
-         * dihubungkan ke Google Sheets + WhatsApp.
-         */
-
-        const rsvpData = {
-
-            name: name,
-
-            attendance: attendance,
-
-            guests: guestCount,
-
-            message: message,
-
-            date:
-                new Date().toLocaleString(
-                    "id-ID"
-                )
-
-        };
-
-
-        localStorage.setItem(
-            "weddingRSVP",
-            JSON.stringify(
-                rsvpData
-            )
-        );
-
-
-        /*
-         * Tampilkan pesan sukses.
-         */
-
-        rsvpForm.style.display =
-            "none";
-
-
-        rsvpSuccess.classList.add(
-            "show"
-        );
-
-
-        setTimeout(
-            function () {
-
-                rsvpSuccess.scrollIntoView({
-                    behavior: "smooth",
-                    block: "center"
-                });
-
-            },
-            100
-        );
-
-    }
-);
-
-
-/* =====================================================
-   HERO PARALLAX
-===================================================== */
-
-window.addEventListener(
-    "scroll",
-    function () {
-
-        const hero =
-            document.querySelector(
-                ".hero"
-            );
-
-        if (!hero) return;
-
-
-        const scroll =
-            window.scrollY;
-
-
-        if (
-            scroll <
-            window.innerHeight
-        ) {
-
-            hero.style.backgroundPosition =
-                `center ${scroll * 0.35}px`;
-
-        }
-
-    }
-);
-
-
-/* =====================================================
-   FLOATING PARTICLES
-===================================================== */
-
-function createParticle() {
-
-    const particle =
-        document.createElement(
-            "span"
-        );
-
-
-    const symbols = [
-        "✦",
-        "✧",
-        "♡",
-        "·"
-    ];
-
-
-    particle.innerText =
-        symbols[
-            Math.floor(
-                Math.random() *
-                symbols.length
-            )
-        ];
-
-
-    particle.style.position =
-        "fixed";
-
-    particle.style.left =
-        Math.random() * 100 + "%";
-
-    particle.style.bottom =
-        "-20px";
-
-    particle.style.zIndex =
-        "5";
-
-    particle.style.pointerEvents =
-        "none";
-
-    particle.style.color =
-        "#b9965b";
-
-    particle.style.opacity =
-        Math.random() * .5 + .2;
-
-    particle.style.fontSize =
-        Math.random() * 12 + 8 + "px";
-
-
-    const duration =
-        Math.random() * 8 + 8;
-
-
-    particle.style.transition =
-        `
-        transform ${duration}s linear,
-        opacity ${duration}s linear
-        `;
-
-
-    document.body.appendChild(
-        particle
     );
 
 
-    setTimeout(
-        function () {
+/* =====================================================
+   PREVENT BODY SCROLL AT OPENING
+===================================================== */
 
-            particle.style.transform =
-                `
-                translate(
-                    ${Math.random() * 120 - 60}px,
-                    -${window.innerHeight + 100}px
-                )
-                rotate(
-                    ${Math.random() * 360}deg
-                )
-                `;
-
-
-            particle.style.opacity =
-                "0";
-
-        },
-        100
-    );
-
-
-    setTimeout(
-        function () {
-
-            particle.remove();
-
-        },
-        duration * 1000 + 500
-    );
-
-}
-
-
-setInterval(
-    createParticle,
-    1200
+document.body.classList.add(
+    "locked"
 );
 
 
 /* =====================================================
-   VISIBILITY
+   PAGE READY
 ===================================================== */
-
-document.addEventListener(
-    "visibilitychange",
-    function () {
-
-        /*
-         * Jika pengunjung meninggalkan tab,
-         * musik dihentikan sementara.
-         */
-
-        if (
-            document.hidden &&
-            !music.paused
-        ) {
-
-            music.pause();
-
-            musicButton.classList.add(
-                "paused"
-            );
-
-            musicButton.innerHTML =
-                "▶";
-
-        }
-
-    }
-);
-
-
-/* =====================================================
-   DEBUG
-===================================================== */
-
-music.addEventListener(
-    "error",
-    function () {
-
-        console.error(
-            "ERROR: File musik tidak ditemukan."
-        );
-
-        console.error(
-            "Pastikan file berada di:"
-        );
-
-        console.error(
-            "assets/Westlife_-_Beautifull_in_White_(mp3.pm).mp3"
-        );
-
-    }
-);
-
-
-music.addEventListener(
-    "canplay",
-    function () {
-
-        console.log(
-            "✓ Wedding music loaded successfully."
-        );
-
-    }
-);
-
 
 console.log(
-    "♡ Rizuka & Denn Wedding Invitation loaded."
+    "Wedding Invitation loaded successfully."
+);
+
+console.log(
+    "Google Sheets RSVP endpoint:",
+    GOOGLE_SCRIPT_URL
 );
